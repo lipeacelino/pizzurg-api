@@ -21,8 +21,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity authenticateUser(@RequestBody LoginUser loginUser){
-        userService.authenticateUser(loginUser);
-        return new ResponseEntity(HttpStatus.OK);
+        String tokenJwt = userService.authenticateUser(loginUser);
+        return new ResponseEntity(tokenJwt, HttpStatus.OK);
     }
 
     @PostMapping("/new")
