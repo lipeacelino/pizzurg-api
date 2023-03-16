@@ -1,13 +1,14 @@
 package com.pizzurg.api.config.security;
 
 import com.pizzurg.api.entity.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-
+@Getter
 public class UserDetailsImpl implements UserDetails { //posteriormente trocar essa nomeclatura ou colocar essa classe em um outro pacote
 
     private User user;

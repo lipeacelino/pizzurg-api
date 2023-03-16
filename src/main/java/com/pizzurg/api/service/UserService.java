@@ -4,6 +4,7 @@ import com.pizzurg.api.config.exception.EmailExistsException;
 import com.pizzurg.api.config.security.SecurityConfiguration;
 import com.pizzurg.api.config.security.TokenJwtService;
 import com.pizzurg.api.config.security.UserDetailsImpl;
+import com.pizzurg.api.dto.auth.TokenJwtDto;
 import com.pizzurg.api.dto.user.LoginUser;
 import com.pizzurg.api.dto.user.RegisterUserDto;
 import com.pizzurg.api.entity.User;
@@ -27,12 +28,12 @@ public class UserService {
     private TokenJwtService tokenJwtService;
 
     //depois ver se tem necessidade de fazer um try/catch nesse fluxo de autenticação
-    public String authenticateUser(LoginUser loginUser) {
+    public TokenJwtDto authenticateUser(LoginUser loginUser) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUser.email(), loginUser.password());
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        return tokenJwtService.generateToken(userDetails);
+        return new TokenJwtDto(tokenJwtService.generateToken(userDetails));
     }
 
     @Transactional
