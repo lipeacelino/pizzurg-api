@@ -1,7 +1,7 @@
 package com.pizzurg.api.controller;
 
 import com.pizzurg.api.dto.auth.TokenJwtDto;
-import com.pizzurg.api.dto.user.LoginUser;
+import com.pizzurg.api.dto.user.LoginUserDto;
 import com.pizzurg.api.dto.user.RegisterUserDto;
 import com.pizzurg.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity authenticateUser(@RequestBody LoginUser loginUser){
-        TokenJwtDto token = userService.authenticateUser(loginUser);
+    public ResponseEntity authenticateUser(@RequestBody LoginUserDto loginUserDto){
+        TokenJwtDto token = userService.authenticateUser(loginUserDto);
         return new ResponseEntity(token, HttpStatus.OK);
     }
 

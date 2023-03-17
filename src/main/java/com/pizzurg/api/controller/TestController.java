@@ -15,4 +15,14 @@ public class TestController {
         return new ResponseEntity("Teste de autorização", HttpStatus.OK);
     }
 
+    @GetMapping("/client")
+    public ResponseEntity test2() {
+        return new ResponseEntity("Teste de autorização do cliente", HttpStatus.OK);
+    }
+
+    @GetMapping("/employee")
+    public ResponseEntity test3() {
+        return new ResponseEntity("Teste de autorização do funcionário", HttpStatus.OK);
+    }
+
 }

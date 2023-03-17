@@ -2,6 +2,10 @@ package com.pizzurg.api.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import java.util.List;
 
 @Table(name = "users")
 @Entity(name = "User")
@@ -16,5 +20,10 @@ public class User {
     private Long id;
     private String email;
     private String password;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id"))
+    private List<Role> roles;
 
 }

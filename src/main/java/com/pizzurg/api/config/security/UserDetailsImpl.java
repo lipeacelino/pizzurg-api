@@ -7,7 +7,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 public class UserDetailsImpl implements UserDetails { //posteriormente trocar essa nomeclatura ou colocar essa classe em um outro pacote
 
@@ -19,9 +20,11 @@ public class UserDetailsImpl implements UserDetails { //posteriormente trocar es
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return user.getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .collect(Collectors.toList());
     }
-
     @Override
     public String getPassword() {
         return user.getPassword();

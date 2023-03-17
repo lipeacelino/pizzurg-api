@@ -29,12 +29,17 @@ public class SecurityConfiguration {
             "/login"
     };
 
+    private static final String [] PRIVATE_ENDPOINT_CLIENT = {
+            "/test/client"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                .requestMatchers(PRIVATE_ENDPOINT_CLIENT).hasRole("CLIENT")
                 .anyRequest().authenticated()
                 .and().addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
