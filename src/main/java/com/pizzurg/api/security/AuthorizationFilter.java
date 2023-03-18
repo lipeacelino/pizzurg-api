@@ -1,4 +1,4 @@
-package com.pizzurg.api.config.security;
+package com.pizzurg.api.security;
 
 import com.pizzurg.api.entity.User;
 import com.pizzurg.api.repository.UserRepository;
@@ -9,9 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 

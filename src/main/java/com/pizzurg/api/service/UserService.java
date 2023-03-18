@@ -1,12 +1,12 @@
 package com.pizzurg.api.service;
 
-import com.pizzurg.api.config.exception.EmailExistsException;
-import com.pizzurg.api.config.security.SecurityConfiguration;
-import com.pizzurg.api.config.security.TokenJwtService;
-import com.pizzurg.api.config.security.UserDetailsImpl;
+import com.pizzurg.api.exception.EmailExistsException;
+import com.pizzurg.api.security.SecurityConfiguration;
+import com.pizzurg.api.security.TokenJwtService;
+import com.pizzurg.api.security.UserDetailsImpl;
 import com.pizzurg.api.dto.auth.TokenJwtDto;
 import com.pizzurg.api.dto.user.LoginUserDto;
-import com.pizzurg.api.dto.user.RegisterUserDto;
+import com.pizzurg.api.dto.user.CreateUserDto;
 import com.pizzurg.api.entity.Role;
 import com.pizzurg.api.entity.User;
 import com.pizzurg.api.enums.RoleName;
@@ -27,7 +27,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RoleRepository roleRepository;
+    private RoleService roleService;
     @Autowired
     private SecurityConfiguration securityConfiguration;
     @Autowired
@@ -45,12 +45,12 @@ public class UserService {
     }
 
     @Transactional
-    public void registerNewUser(RegisterUserDto registerUserDto) {
-        if (checkIfEmailNotExists(registerUserDto.email())) {
+    public void createUser(CreateUserDto createUserDto, RoleName roleName) {
+        if (checkIfEmailNotExists(createUserDto.email())) {
             User newUser = User.builder()
-                    .email(registerUserDto.email())
-                    .password(securityConfiguration.passwordEncoder().encode(registerUserDto.password()))
-                    .roles(List.of(getRole(RoleName.ROLE_CLIENT)))
+                    .email(createUserDto.email())
+                    .password(securityConfiguration.passwordEncoder().encode(createUserDto.password()))
+                    .roles(List.of(roleService.getRole(roleName)))
                     .build();
             userRepository.save(newUser);
         }
@@ -61,13 +61,5 @@ public class UserService {
             throw new EmailExistsException();
         }
         return true;
-    }
-    private Role getRole(RoleName roleName) {
-       Optional<Role> roleOptional = roleRepository.findByName(roleName.name());
-       if (roleOptional.isPresent()) {
-           return roleOptional.get();
-       }
-       Role role = Role.builder().name(roleName).build();
-       return roleRepository.save(role);
     }
 }

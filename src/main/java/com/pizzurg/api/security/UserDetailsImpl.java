@@ -1,4 +1,4 @@
-package com.pizzurg.api.config.security;
+package com.pizzurg.api.security;
 
 import com.pizzurg.api.entity.User;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package com.pizzurg.api.config.security;
+package com.pizzurg.api.security;
 
-import com.pizzurg.api.config.exception.UserNotFounException;
+import com.pizzurg.api.exception.UserNotFounException;
 import com.pizzurg.api.entity.User;
 import com.pizzurg.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

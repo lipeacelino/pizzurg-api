@@ -1,4 +1,4 @@
-package com.pizzurg.api.config.exception;
+package com.pizzurg.api.exception;
 
 public class UserNotFounException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package com.pizzurg.api.controller;
+package com.pizzurg.api.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,17 +12,22 @@ public class TestController {
 
     @GetMapping
     public ResponseEntity test() {
-        return new ResponseEntity("Teste de autorização", HttpStatus.OK);
+        return new ResponseEntity("Authorization test", HttpStatus.OK);
     }
 
-    @GetMapping("/client")
+    @GetMapping("/customer")
     public ResponseEntity test2() {
-        return new ResponseEntity("Teste de autorização do cliente", HttpStatus.OK);
+        return new ResponseEntity("Customer test authorization", HttpStatus.OK);
     }
 
     @GetMapping("/employee")
     public ResponseEntity test3() {
-        return new ResponseEntity("Teste de autorização do funcionário", HttpStatus.OK);
+        return new ResponseEntity("Employee test authorization", HttpStatus.OK);
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity test4() {
+        return new ResponseEntity("Administrator test authorization", HttpStatus.OK);
     }
 
 }

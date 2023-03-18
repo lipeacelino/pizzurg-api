@@ -1,4 +1,4 @@
-package com.pizzurg.api.config.security;
+package com.pizzurg.api.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
