@@ -28,7 +28,8 @@ public class SecurityConfiguration {
             "/test/customer"
     };
     private static final String [] PRIVATE_ENDPOINTS_ADMINISTRATOR = {
-            "/user/new/employee"
+            "/user/new/employee",
+            "/user/delete/{id}"
     };
     private static final String [] PRIVATE_ENDPOINTS_EMPLOYEE = {
             "/test/employee"

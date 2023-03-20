@@ -1,16 +1,15 @@
 package com.pizzurg.api.service;
 
 import com.pizzurg.api.exception.EmailExistsException;
+import com.pizzurg.api.exception.UserNotFoundException;
 import com.pizzurg.api.security.SecurityConfiguration;
 import com.pizzurg.api.security.TokenJwtService;
 import com.pizzurg.api.security.UserDetailsImpl;
-import com.pizzurg.api.dto.auth.TokenJwtDto;
-import com.pizzurg.api.dto.user.LoginUserDto;
-import com.pizzurg.api.dto.user.CreateUserDto;
-import com.pizzurg.api.entity.Role;
+import com.pizzurg.api.dto.output.auth.TokenJwtDto;
+import com.pizzurg.api.dto.input.user.LoginUserDto;
+import com.pizzurg.api.dto.input.user.CreateUserDto;
 import com.pizzurg.api.entity.User;
 import com.pizzurg.api.enums.RoleName;
-import com.pizzurg.api.repository.RoleRepository;
 import com.pizzurg.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -35,7 +33,6 @@ public class UserService {
     @Autowired
     private TokenJwtService tokenJwtService;
 
-    //depois ver se tem necessidade de fazer um try/catch nesse fluxo de autenticação
     public TokenJwtDto authenticateUser(LoginUserDto loginUserDto) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUserDto.email(), loginUserDto.password());
@@ -61,5 +58,11 @@ public class UserService {
             throw new EmailExistsException();
         }
         return true;
+    }
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException();
+        }
+        userRepository.deleteById(id);
     }
 }

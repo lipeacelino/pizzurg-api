@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Getter
-public class UserDetailsImpl implements UserDetails { //posteriormente trocar essa nomeclatura ou colocar essa classe em um outro pacote
+public class UserDetailsImpl implements UserDetails {
 
     private User user;
 

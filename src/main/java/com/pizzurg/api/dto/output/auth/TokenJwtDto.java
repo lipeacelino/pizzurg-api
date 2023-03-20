@@ -1,4 +1,4 @@
-package com.pizzurg.api.dto.auth;
+package com.pizzurg.api.dto.output.auth;
 
 public record TokenJwtDto(String token) {
 }

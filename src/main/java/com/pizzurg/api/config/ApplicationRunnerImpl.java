@@ -1,6 +1,6 @@
 package com.pizzurg.api.config;
 
-import com.pizzurg.api.dto.user.CreateUserDto;
+import com.pizzurg.api.dto.input.user.CreateUserDto;
 import com.pizzurg.api.enums.RoleName;
 import com.pizzurg.api.repository.UserRepository;
 import com.pizzurg.api.service.UserService;
@@ -16,7 +16,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     @Autowired
     private UserRepository userRepository;
     private static final String EMAIL = "admin@email.com";
-    private static final String PASSWORD = "12345";
+    private static final String PASSWORD = "12345678";
 
 
     @Override
