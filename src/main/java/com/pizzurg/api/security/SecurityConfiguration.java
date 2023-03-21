@@ -20,7 +20,7 @@ public class SecurityConfiguration {
 
     @Autowired
     private AuthorizationFilter authorizationFilter;
-    private static final String [] PUBLIC_ENDPOINTS = {
+    public static final String [] PUBLIC_ENDPOINTS = {
             "/user/new/customer",
             "/user/login"
     };

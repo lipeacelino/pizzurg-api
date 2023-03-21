@@ -3,6 +3,7 @@ package com.pizzurg.api.controller;
 import com.pizzurg.api.dto.output.auth.TokenJwtDto;
 import com.pizzurg.api.dto.input.user.LoginUserDto;
 import com.pizzurg.api.dto.input.user.CreateUserDto;
+import com.pizzurg.api.entity.User;
 import com.pizzurg.api.enums.RoleName;
 import com.pizzurg.api.service.UserService;
 import jakarta.validation.Valid;
@@ -20,23 +21,23 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity authenticateUser(@Valid @RequestBody LoginUserDto loginUserDto) {
+    public ResponseEntity<TokenJwtDto> authenticateUser(@Valid @RequestBody LoginUserDto loginUserDto) {
         TokenJwtDto token = userService.authenticateUser(loginUserDto);
-        return new ResponseEntity(token, HttpStatus.OK);
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
     @PostMapping("/new/customer")
-    public ResponseEntity createCustomerUser(@Valid @RequestBody CreateUserDto createUserDto) {
+    public ResponseEntity<Void> createCustomerUser(@Valid @RequestBody CreateUserDto createUserDto) {
         userService.createUser(createUserDto, RoleName.ROLE_CUSTOMER);
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @PostMapping("/new/employee")
-    public ResponseEntity createEmployeeUser(@Valid @RequestBody CreateUserDto createUserDto) {
+    public ResponseEntity<Void> createEmployeeUser(@Valid @RequestBody CreateUserDto createUserDto) {
         userService.createUser(createUserDto, RoleName.ROLE_EMPLOYEE);
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

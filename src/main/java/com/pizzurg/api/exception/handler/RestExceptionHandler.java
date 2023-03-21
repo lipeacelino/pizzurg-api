@@ -15,55 +15,70 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> genericException(Exception ex) {
+        ApiError apiError = ApiError
+                .builder()
+                .timestamp(LocalDateTime.now())
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
+                .errors(List.of(ex.getMessage()))
+                .build();
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity badCredentialsErrors(Exception ex) {
-        List<String> errorList = List.of(ex.getMessage());
-        ApiError apiError = ApiError.builder()
+    public ResponseEntity<ApiError> badCredentialsException(Exception ex) {
+        ApiError apiError = ApiError
+                .builder()
                 .timestamp(LocalDateTime.now())
                 .code(HttpStatus.UNAUTHORIZED.value())
                 .status(HttpStatus.UNAUTHORIZED.name())
-                .errors(errorList)
+                .errors(List.of(ex.getMessage()))
                 .build();
-        return new ResponseEntity(apiError, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity userNotFoundException(UserNotFoundException ex) {
-        List<String> errorList = List.of(ex.getMessage());
-        ApiError apiError = ApiError.builder()
+    public ResponseEntity<ApiError> userNotFoundException(UserNotFoundException ex) {
+        ApiError apiError = ApiError
+                .builder()
                 .timestamp(LocalDateTime.now())
                 .code(HttpStatus.NOT_FOUND.value())
                 .status(HttpStatus.NOT_FOUND.name())
-                .errors(errorList)
+                .errors(List.of(ex.getMessage()))
                 .build();
-        return new ResponseEntity(apiError, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(EmailExistsException.class)
-    public ResponseEntity emailExistsException(EmailExistsException ex) {
-        List<String> errorList = List.of(ex.getMessage());
-        ApiError apiError = ApiError.builder()
+    public ResponseEntity<ApiError> emailExistsException(EmailExistsException ex) {
+        ApiError apiError = ApiError
+                .builder()
                 .timestamp(LocalDateTime.now())
                 .code(HttpStatus.CONFLICT.value())
                 .status(HttpStatus.CONFLICT.name())
-                .errors(errorList)
+                .errors(List.of(ex.getMessage()))
                 .build();
-        return new ResponseEntity(apiError, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity argumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiError> argumentNotValidException(MethodArgumentNotValidException ex) {
         List<String> errorList = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.toList());
-        ApiError apiError = ApiError.builder()
+        ApiError apiError = ApiError
+                .builder()
                 .timestamp(LocalDateTime.now())
                 .code(HttpStatus.BAD_REQUEST.value())
                 .status(HttpStatus.BAD_REQUEST.name())
                 .errors(errorList)
                 .build();
-        return new ResponseEntity(apiError, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
 }

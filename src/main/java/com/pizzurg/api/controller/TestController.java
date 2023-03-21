@@ -11,23 +11,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @GetMapping
-    public ResponseEntity test() {
-        return new ResponseEntity("Authorization test", HttpStatus.OK);
+    public ResponseEntity<String> test() {
+        return new ResponseEntity<>("Authorization test", HttpStatus.OK);
     }
 
     @GetMapping("/customer")
-    public ResponseEntity test2() {
-        return new ResponseEntity("Customer test authorization", HttpStatus.OK);
+    public ResponseEntity<String> test2() {
+        return new ResponseEntity<>("Customer test authorization", HttpStatus.OK);
     }
 
     @GetMapping("/employee")
-    public ResponseEntity test3() {
-        return new ResponseEntity("Employee test authorization", HttpStatus.OK);
+    public ResponseEntity<String> test3() {
+        return new ResponseEntity<>("Employee test authorization", HttpStatus.OK);
     }
 
     @GetMapping("/admin")
-    public ResponseEntity test4() {
-        return new ResponseEntity("Administrator test authorization", HttpStatus.OK);
+    public ResponseEntity<String> test4() {
+        return new ResponseEntity<>("Administrator test authorization", HttpStatus.OK);
     }
 
 }

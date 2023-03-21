@@ -24,7 +24,7 @@ public class TokenJwtService {
                     .withSubject(user.getUsername())
                     .sign(algorithm);
         } catch (JWTCreationException exception){
-            throw new JWTCreationException("Error generating JWT token", exception);
+            throw new JWTCreationException("Erro ao gerar token.", exception);
         }
     }
 
@@ -37,7 +37,7 @@ public class TokenJwtService {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException exception){
-            throw new JWTVerificationException("Error checking JWT token");
+            throw new JWTVerificationException("Token inválido ou expirado.");
         }
     }
 
