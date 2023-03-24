@@ -43,7 +43,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                     String subject = tokenJwtService.getSubjectFromToken(token);
                     User user = userRepository.findByEmail(subject).get();
                     UserDetailsImpl userDetails = new UserDetailsImpl(user);
-                    Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails.getUser().getEmail(), null, userDetails.getAuthorities()); //acho que dá pra trocar por um new SimpleAuthority...
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails.getUser().getEmail(), null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } else {
                     throw new MissingTokenException();

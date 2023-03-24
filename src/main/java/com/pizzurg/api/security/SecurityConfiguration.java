@@ -21,15 +21,15 @@ public class SecurityConfiguration {
     @Autowired
     private AuthorizationFilter authorizationFilter;
     public static final String [] PUBLIC_ENDPOINTS = {
-            "/user/new/customer",
-            "/user/login"
+            "/users/customers",
+            "/users/login"
     };
     private static final String [] PRIVATE_ENDPOINTS_CUSTOMER = {
             "/test/customer"
     };
     private static final String [] PRIVATE_ENDPOINTS_ADMINISTRATOR = {
-            "/user/new/employee",
-            "/user/delete/{id}"
+            "/users/employees",
+            "/users/{id}"
     };
     private static final String [] PRIVATE_ENDPOINTS_EMPLOYEE = {
             "/test/employee"

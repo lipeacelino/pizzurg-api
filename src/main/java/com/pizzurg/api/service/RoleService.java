@@ -12,7 +12,7 @@ import java.util.Optional;
 public class RoleService {
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     public Role getRole(RoleName roleName) {
         Optional<Role> roleOptional = roleRepository.findByName(roleName);
