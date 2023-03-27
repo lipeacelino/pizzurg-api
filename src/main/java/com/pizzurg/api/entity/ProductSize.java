@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name="product_sizes")
 @Builder
@@ -20,6 +22,7 @@ public class ProductSize {
     private String description;
     @Builder.Default
     private Boolean available = true;
+    private BigDecimal price;
     @ManyToOne
     @JoinColumn(name = "product_id")
     @JsonBackReference

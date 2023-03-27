@@ -21,13 +21,11 @@ public class Product {
     private Long id;
     private String name;
     private String description;
-    private BigDecimal price;
     @Enumerated(EnumType.STRING)
     private Category category;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<ProductSize> productSizeList;
-    @Builder.Default
-    private Boolean available = true;
+    private Boolean available;
 
 }

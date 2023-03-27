@@ -2,6 +2,7 @@ package com.pizzurg.api.controller;
 
 import com.pizzurg.api.dto.input.product.CreateProductDto;
 import com.pizzurg.api.dto.input.product.UpdateProductDto;
+import com.pizzurg.api.dto.input.product.UpdateProductSizeDto;
 import com.pizzurg.api.dto.output.product.RecoveryProductDto;
 import com.pizzurg.api.service.ProductService;
 import jakarta.validation.Valid;
@@ -35,8 +36,14 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}") //ver se dá pra validar a path variable
-    public ResponseEntity<RecoveryProductDto> updateProduct(@PathVariable Long id, @RequestBody @Valid UpdateProductDto updateProductDto) {
-        return new ResponseEntity<>(productService.updateProduct(id, updateProductDto), HttpStatus.OK);
+    public ResponseEntity<RecoveryProductDto> updateProductPart(@PathVariable Long id, @RequestBody @Valid UpdateProductDto updateProductDto) {
+        return new ResponseEntity<>(productService.updateProductPart(id, updateProductDto), HttpStatus.OK);
+    }
+
+    @PutMapping("/{productId}/sizes/{productSizeId}")
+    public ResponseEntity<RecoveryProductDto> updateProductSize(@PathVariable Long productId, @PathVariable Long productSizeId,
+                                                                @RequestBody @Valid UpdateProductSizeDto updateProductSizeDto) {
+        return new ResponseEntity<>(productService.updateProductSize(productId, productSizeId , updateProductSizeDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}") //ver se dá pra validar a path variable

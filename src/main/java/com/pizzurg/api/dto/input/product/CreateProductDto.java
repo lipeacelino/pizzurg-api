@@ -13,12 +13,9 @@ public record CreateProductDto(
         String name,
         @NotBlank(message="{not.blank.message}")
         String description,
-        @NotNull(message="{not.null.message}") //é bom validar com um regex
-        BigDecimal price,
         @NotBlank(message="{not.blank.message}")
         String category,
-
         @NotEmpty(message = "{not.empty.message}")
-        List<ProductSize> productSizes,
+        List<CreateProductSizeDto> productSizes,
         Boolean available ) {
 }
