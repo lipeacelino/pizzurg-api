@@ -1,6 +1,7 @@
 package com.pizzurg.api.service;
 
 import com.pizzurg.api.dto.input.product.CreateProductDto;
+import com.pizzurg.api.dto.input.product.SearchProductDto;
 import com.pizzurg.api.dto.input.product.UpdateProductDto;
 import com.pizzurg.api.dto.input.product.UpdateProductSizeDto;
 import com.pizzurg.api.dto.output.product.RecoveryProductDto;
@@ -13,6 +14,8 @@ import com.pizzurg.api.exception.ProductUnavailableException;
 import com.pizzurg.api.mapper.ProductMapper;
 import com.pizzurg.api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
@@ -56,11 +59,18 @@ public class ProductService {
         return productMapper.recoveryProductDtoFromProduct(productSaved);
     }
 
-    public List<RecoveryProductDto> recoveryProducts() {
-        List<Product> productList = productRepository.findAll();
-        return productList.stream()
-                .map(product -> productMapper.recoveryProductDtoFromProduct(product))
-                .toList();
+    public Page<RecoveryProductDto> recoveryProducts(Pageable pageable) {
+        Page<Product> productList = productRepository.findAll(pageable);
+        return productList.map(product -> productMapper.recoveryProductDtoFromProduct(product));
+    }
+
+    public Page<RecoveryProductDto> recoveryProductsByCategory(String categoryName, Pageable pageable) {
+        Page<Product> productList = productRepository.findByCategory(removeAccentsAndReturnTypeCategoryEnum(categoryName), pageable);
+        return productList.map(product -> productMapper.recoveryProductDtoFromProduct(product));
+    }
+    public Page<RecoveryProductDto> recoveryProductsByNameContaining(SearchProductDto searchProductDto, Pageable pageable) {
+        Page<Product> productList = productRepository.findByNameContaining(searchProductDto.name(), pageable);
+        return productList.map(product -> productMapper.recoveryProductDtoFromProduct(product));
     }
 
     public RecoveryProductDto findProductById(Long id) {

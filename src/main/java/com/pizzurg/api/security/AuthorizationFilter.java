@@ -69,7 +69,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
     private boolean checkIfEndpointIsNotPublic(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        return !Arrays.asList(SecurityConfiguration.PUBLIC_ENDPOINTS).contains(requestURI);
+        return !Arrays.asList(SecurityConfiguration.NO_AUTH_ENDPOINTS).contains(requestURI);
     }
 
     private void buidErrorResponse(Integer codeError, String statusError, Exception ex, HttpServletResponse response) throws IOException {

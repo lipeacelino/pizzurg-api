@@ -7,6 +7,7 @@ import com.pizzurg.api.entity.Product;
 import com.pizzurg.api.entity.ProductSize;
 import com.pizzurg.api.enums.Category;
 import org.mapstruct.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 

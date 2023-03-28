@@ -20,9 +20,23 @@ public class SecurityConfiguration {
 
     @Autowired
     private AuthorizationFilter authorizationFilter;
-    public static final String [] PUBLIC_ENDPOINTS = {
+    private static final String ROLE_CUSTOMER = "CUSTOMER";
+    private static final String ROLE_ADMINISTRATOR = "ADMINISTRATOR";
+    private static final String ROLE_EMPLOYEE = "EMPLOYEE";
+    public static final String [] NO_AUTH_ENDPOINTS = {
             "/users/customers",
             "/users/login"
+    };
+    private static final String [] PUBLIC_ENDPOINTS_PRODUCT = {
+            "/products",
+            "/products/{id}",
+            "/products/category/{categoryName}",
+            "/products/search"
+    };
+    private static final String [] PRIVATE_ENDPOINTS_PRODUCT = {
+            "/products",
+            "/products/{id}",
+            "/products/{productId}/sizes/{productSizeId}"
     };
     private static final String [] PRIVATE_ENDPOINTS_CUSTOMER = {
             "/test/customer"
@@ -39,10 +53,12 @@ public class SecurityConfiguration {
         return httpSecurity.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                .requestMatchers(PRIVATE_ENDPOINTS_CUSTOMER).hasRole("CUSTOMER")
-                .requestMatchers(PRIVATE_ENDPOINTS_ADMINISTRATOR).hasRole("ADMINISTRATOR")
-                .requestMatchers(PRIVATE_ENDPOINTS_EMPLOYEE).hasRole("EMPLOYEE")
+                .requestMatchers(HttpMethod.POST, NO_AUTH_ENDPOINTS).permitAll()
+                .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS_PRODUCT).authenticated()
+                .requestMatchers(PRIVATE_ENDPOINTS_PRODUCT).hasAnyRole(ROLE_ADMINISTRATOR, ROLE_EMPLOYEE)
+                .requestMatchers(PRIVATE_ENDPOINTS_CUSTOMER).hasRole(ROLE_CUSTOMER)
+                .requestMatchers(PRIVATE_ENDPOINTS_ADMINISTRATOR).hasRole(ROLE_ADMINISTRATOR)
+                .requestMatchers(PRIVATE_ENDPOINTS_EMPLOYEE).hasRole(ROLE_EMPLOYEE)
                 .anyRequest().authenticated()
                 .and().addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

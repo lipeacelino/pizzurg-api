@@ -1,17 +1,21 @@
 package com.pizzurg.api.controller;
 
 import com.pizzurg.api.dto.input.product.CreateProductDto;
+import com.pizzurg.api.dto.input.product.SearchProductDto;
 import com.pizzurg.api.dto.input.product.UpdateProductDto;
 import com.pizzurg.api.dto.input.product.UpdateProductSizeDto;
 import com.pizzurg.api.dto.output.product.RecoveryProductDto;
 import com.pizzurg.api.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -26,8 +30,34 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RecoveryProductDto>> recoveryProducts() {
-        return new ResponseEntity<>(productService.recoveryProducts(), HttpStatus.OK);
+    public ResponseEntity<Page<RecoveryProductDto>> recoveryProducts(
+            @PageableDefault(size = 5)
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "name", direction = Sort.Direction.ASC), //Critério de ordenação
+                    @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
+            Pageable pageable) {
+        return new ResponseEntity<>(productService.recoveryProducts(pageable), HttpStatus.OK);
+    }
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<Page<RecoveryProductDto>> recoveryProductsByCategory(
+            @PageableDefault(size = 5)
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "name", direction = Sort.Direction.ASC), //Critério de ordenação
+                    @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
+            Pageable pageable,
+            @PathVariable String categoryName) {
+        return new ResponseEntity<>(productService.recoveryProductsByCategory(categoryName, pageable), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<RecoveryProductDto>> recoveryProductsByNameContaining(
+            @PageableDefault(size = 5)
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "name", direction = Sort.Direction.ASC), //Critério de ordenação
+                    @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
+            Pageable pageable,
+            @RequestBody SearchProductDto searchproductDto) {
+        return new ResponseEntity<>(productService.recoveryProductsByNameContaining(searchproductDto, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{id}") //ver se dá pra validar a path variable
