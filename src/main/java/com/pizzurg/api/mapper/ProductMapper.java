@@ -1,27 +1,29 @@
 package com.pizzurg.api.mapper;
 
-import com.pizzurg.api.dto.input.product.CreateProductSizeDto;
+import com.pizzurg.api.dto.input.product.CreateProductVariationDto;
 import com.pizzurg.api.dto.output.product.RecoveryProductDto;
-import com.pizzurg.api.dto.output.product.RecoveryProductSizeDto;
+import com.pizzurg.api.dto.output.product.RecoveryProductVariationDto;
 import com.pizzurg.api.entity.Product;
-import com.pizzurg.api.entity.ProductSize;
+import com.pizzurg.api.entity.ProductVariation;
 import com.pizzurg.api.enums.Category;
-import org.mapstruct.*;
-import org.springframework.data.domain.Page;
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
-    @Mapping(source = "productSizeList", target = "productSizes", qualifiedByName = "recoveryProductSizeDtoListFromProductSizeList")
+    @Mapping(source = "productVariationList", target = "productVariations", qualifiedByName = "recoveryProductVariationDtoListFromProductVariationList")
     @Mapping(source = "category", target = "category", qualifiedByName = "categoryEnumToString")
     RecoveryProductDto recoveryProductDtoFromProduct(Product product);
-    @Named("recoveryProductSizeDtoListFromProductSizeList")
-    @IterableMapping(qualifiedByName = "recoveryProductSizeDtoFromProductSize")
-    List<RecoveryProductSizeDto> recoveryProductSizeDtoListFromProductSizeList(List<ProductSize> productSize);
-    @Named("recoveryProductSizeDtoFromProductSize")
-    RecoveryProductSizeDto recoveryProductSizeDtoFromProductSize(ProductSize productSize);
-    ProductSize productSizeFromCreateProductSizeDto(CreateProductSizeDto createProductSizeDto);
+    @Named("recoveryProductVariationDtoListFromProductVariationList")
+    @IterableMapping(qualifiedByName = "recoveryProductVariationDtoFromProductVariation")
+    List<RecoveryProductVariationDto> recoveryProductVariationDtoListFromProductVariationList(List<ProductVariation> productVariation);
+    @Named("recoveryProductVariationDtoFromProductVariation")
+    RecoveryProductVariationDto recoveryProductVariationDtoFromProductVariation(ProductVariation productVariation);
+    ProductVariation productVariationFromCreateProductVariationDto(CreateProductVariationDto createProductVariationDto);
     @Named("categoryEnumToString")
     default String categoryEnumToString(Category category) {
         return category.getName();

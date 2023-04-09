@@ -2,7 +2,7 @@ package com.pizzurg.api.dto.output.product;
 
 import java.math.BigDecimal;
 
-public record RecoveryProductSizeDto(
+public record RecoveryProductVariationDto(
         Long id,
         String sizeName,
         String description,

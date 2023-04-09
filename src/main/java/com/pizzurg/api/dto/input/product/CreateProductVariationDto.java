@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record CreateProductSizeDto(
+public record CreateProductVariationDto(
         @NotBlank(message="{not.blank.message}")
         String sizeName,
         @NotBlank(message="{not.blank.message}")

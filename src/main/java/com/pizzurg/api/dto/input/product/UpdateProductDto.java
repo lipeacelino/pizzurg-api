@@ -5,6 +5,5 @@ import java.math.BigDecimal;
 public record UpdateProductDto(
         String name,
         String description,
-        BigDecimal price,
         Boolean available) {
 }

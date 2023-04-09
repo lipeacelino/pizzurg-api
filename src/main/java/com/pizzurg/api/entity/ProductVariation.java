@@ -7,17 +7,16 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name="product_sizes")
+@Table(name="product_variations")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class ProductSize {
+public class ProductVariation { //mudar para o nome ProductVariation
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "size_name")
     private String sizeName;
     private String description;
     @Builder.Default

@@ -2,7 +2,7 @@ package com.pizzurg.api.dto.input.product;
 
 import java.math.BigDecimal;
 
-public record UpdateProductSizeDto(
+public record UpdateProductVariationDto(
         String sizeName,
         String description,
         BigDecimal price,

@@ -10,6 +10,6 @@ public record RecoveryProductDto(
         String name,
         String description,
         String category,
-        List<RecoveryProductSizeDto> productSizes,
+        List<RecoveryProductVariationDto> productVariations,
         Boolean available ) {
 }

@@ -1,10 +1,8 @@
 package com.pizzurg.api.controller;
 
-import com.pizzurg.api.dto.input.product.CreateProductDto;
-import com.pizzurg.api.dto.input.product.SearchProductDto;
-import com.pizzurg.api.dto.input.product.UpdateProductDto;
-import com.pizzurg.api.dto.input.product.UpdateProductSizeDto;
+import com.pizzurg.api.dto.input.product.*;
 import com.pizzurg.api.dto.output.product.RecoveryProductDto;
+import com.pizzurg.api.dto.output.product.RecoveryProductVariationDto;
 import com.pizzurg.api.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,12 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<RecoveryProductDto> createProduct(@RequestBody @Valid CreateProductDto productDto) {
         return new ResponseEntity<>(productService.createProduct(productDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping({"/{productId}"})
+    public ResponseEntity<RecoveryProductVariationDto> createProductSize(@PathVariable Long productId,
+                                                                         @RequestBody @Valid CreateProductVariationDto createProductVariationDto) {
+        return new ResponseEntity<>(productService.createProductSize(productId, createProductVariationDto), HttpStatus.OK);
     }
 
     @GetMapping
@@ -60,25 +64,31 @@ public class ProductController {
         return new ResponseEntity<>(productService.recoveryProductsByNameContaining(searchproductDto, pageable), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}") //ver se dá pra validar a path variable
-    public ResponseEntity<RecoveryProductDto> findProductById(@PathVariable Long id) {
-        return new ResponseEntity<>(productService.findProductById(id), HttpStatus.OK);
+    @GetMapping("/{productId}") //ver se dá pra validar a path variable
+    public ResponseEntity<RecoveryProductDto> findProductById(@PathVariable Long productId) {
+        return new ResponseEntity<>(productService.findProductById(productId), HttpStatus.OK);
     }
 
-    @PatchMapping("/{id}") //ver se dá pra validar a path variable
-    public ResponseEntity<RecoveryProductDto> updateProductPart(@PathVariable Long id, @RequestBody @Valid UpdateProductDto updateProductDto) {
-        return new ResponseEntity<>(productService.updateProductPart(id, updateProductDto), HttpStatus.OK);
+    @PatchMapping("/{productId}") //ver se dá pra validar a path variable
+    public ResponseEntity<RecoveryProductDto> updateProductPart(@PathVariable Long productId, @RequestBody @Valid UpdateProductDto updateProductDto) {
+        return new ResponseEntity<>(productService.updateProductPart(productId, updateProductDto), HttpStatus.OK);
     }
 
-    @PutMapping("/{productId}/sizes/{productSizeId}")
-    public ResponseEntity<RecoveryProductDto> updateProductSize(@PathVariable Long productId, @PathVariable Long productSizeId,
-                                                                @RequestBody @Valid UpdateProductSizeDto updateProductSizeDto) {
-        return new ResponseEntity<>(productService.updateProductSize(productId, productSizeId , updateProductSizeDto), HttpStatus.OK);
+    @PutMapping("/{productId}/sizes/{productVariationId}")
+    public ResponseEntity<RecoveryProductDto> updateProductVariation(@PathVariable Long productId, @PathVariable Long productVariationId,
+                                                                @RequestBody @Valid UpdateProductVariationDto updateProductVariationDto) {
+        return new ResponseEntity<>(productService.updateProductVariation(productId, productVariationId, updateProductVariationDto), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}") //ver se dá pra validar a path variable
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+    @DeleteMapping("/{productId}") //ver se dá pra validar a path variable
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/{productId}/variation/{variationId}") //ver se dá pra validar a path variable
+    public ResponseEntity<Void> deleteProductVariation(@PathVariable Long productId, @PathVariable Long variationId) {
+        productService.deleteProductVariation(productId, variationId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

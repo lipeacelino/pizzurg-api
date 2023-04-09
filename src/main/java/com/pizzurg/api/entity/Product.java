@@ -5,7 +5,6 @@ import com.pizzurg.api.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -25,7 +24,7 @@ public class Product {
     private Category category;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<ProductSize> productSizeList;
+    private List<ProductVariation> productVariationList;
     private Boolean available;
 
 }

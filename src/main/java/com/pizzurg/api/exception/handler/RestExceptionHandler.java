@@ -39,7 +39,7 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({UserNotFoundException.class, ProductNotFoundException.class, ProductSizeNotFoundException.class})
+    @ExceptionHandler({UserNotFoundException.class, ProductNotFoundException.class, ProductVariationNotFoundException.class})
     public ResponseEntity<ApiError> notFoundException(RuntimeException ex) {
         ApiError apiError = ApiError
                 .builder()
