@@ -23,7 +23,6 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Category category;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private List<ProductVariation> productVariationList;
     private Boolean available;
 

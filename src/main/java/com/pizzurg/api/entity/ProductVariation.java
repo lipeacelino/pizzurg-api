@@ -24,7 +24,6 @@ public class ProductVariation { //mudar para o nome ProductVariation
     private BigDecimal price;
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonBackReference
     private Product product;
 
 }

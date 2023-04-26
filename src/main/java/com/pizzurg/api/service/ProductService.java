@@ -98,6 +98,8 @@ public class ProductService {
 
     public RecoveryProductDto updateProductPart(Long productId, UpdateProductDto updateProductDto) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+
+        //invocando todas as estratégias que foram criadas para atualizar um produto
         productUpdateList.forEach(productUpdate -> productUpdate.update(product, updateProductDto));
         return productMapper.recoveryProductDtoFromProduct(productRepository.save(product));
     }

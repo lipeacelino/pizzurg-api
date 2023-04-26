@@ -24,7 +24,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         try {
             createAdminUser();
         } catch(Exception e) {
-            throw new Exception("Error creating admin user", e);
+            throw new Exception("Erro ao criar usuário admin", e);
         }
     }
     private void createAdminUser() {

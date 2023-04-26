@@ -34,6 +34,10 @@ public class SecurityConfiguration {
             "/{productId}/variation/{variationId}",
             "/{productId}"
     };
+
+    private static final String [] ENDPOINTS_ORDER = {
+            "/orders"
+    };
     private static final String [] PRIVATE_ENDPOINTS_PRODUCT = {
             "/products",
             "/products/{productId}",
@@ -52,6 +56,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.GET, ENDPOINTS_PRODUCT).authenticated()
                 .requestMatchers(PRIVATE_ENDPOINTS_PRODUCT).hasAnyRole(ROLE_ADMINISTRATOR, ROLE_EMPLOYEE)
                 .requestMatchers(PRIVATE_ENDPOINTS_ADMINISTRATOR).hasRole(ROLE_ADMINISTRATOR)
+                .requestMatchers(ENDPOINTS_ORDER).authenticated()
                 .anyRequest().denyAll()
                 .and().addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
