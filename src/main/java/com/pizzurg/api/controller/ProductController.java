@@ -28,14 +28,14 @@ public class ProductController {
     }
 
     @PostMapping({"/{productId}"})
-    public ResponseEntity<RecoveryProductVariationDto> createProductSize(@PathVariable Long productId,
-                                                                         @RequestBody @Valid CreateProductVariationDto createProductVariationDto) {
-        return new ResponseEntity<>(productService.createProductSize(productId, createProductVariationDto), HttpStatus.OK);
+    public ResponseEntity<RecoveryProductVariationDto> createProductVariation(@PathVariable Long productId,
+                                                                              @RequestBody @Valid CreateProductVariationDto createProductVariationDto) {
+        return new ResponseEntity<>(productService.createProductVariation(productId, createProductVariationDto), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<Page<RecoveryProductDto>> recoveryProducts(
-            @PageableDefault(size = 5)
+            @PageableDefault(size = 8)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "name", direction = Sort.Direction.ASC), //Critério de ordenação
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
@@ -44,7 +44,7 @@ public class ProductController {
     }
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<Page<RecoveryProductDto>> recoveryProductsByCategory(
-            @PageableDefault(size = 5)
+            @PageableDefault(size = 8)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "name", direction = Sort.Direction.ASC), //Critério de ordenação
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
@@ -56,7 +56,7 @@ public class ProductController {
 
     @GetMapping("/search")
     public ResponseEntity<Page<RecoveryProductDto>> recoveryProductsByNameContaining(
-            @PageableDefault(size = 5)
+            @PageableDefault(size = 8)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "name", direction = Sort.Direction.ASC), //Critério de ordenação
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate

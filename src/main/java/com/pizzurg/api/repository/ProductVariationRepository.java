@@ -10,6 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface ProductVariationRepository extends JpaRepository<ProductVariation, Long> {
+
     @Query("select pv from ProductVariation pv where pv.id = :productVariationId and pv.product.id = :productId")
     Optional<ProductVariation> findByIdAndProductId(@Param("productVariationId") Long productVariationId, @Param("productId") Long productId);
+
 }

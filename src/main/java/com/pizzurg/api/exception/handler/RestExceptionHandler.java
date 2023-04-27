@@ -43,7 +43,8 @@ public class RestExceptionHandler {
             ProductNotFoundException.class,
             ProductVariationNotFoundException.class,
             OrderNotFoundException.class,
-            OrderNotFoundByUserException.class})
+            OrderNotFoundByUserException.class,
+            ProductVariationUnavailableException.class})
     public ResponseEntity<ApiError> notFoundException(RuntimeException ex) {
         ApiError apiError = ApiError
                 .builder()
@@ -53,18 +54,6 @@ public class RestExceptionHandler {
                 .errors(List.of(ex.getMessage()))
                 .build();
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(ProductUnavailableException.class)
-    public ResponseEntity<ApiError> productUnavailableException(ProductUnavailableException ex) {
-        ApiError apiError = ApiError
-                .builder()
-                .timestamp(LocalDateTime.now())
-                .code(HttpStatus.BAD_REQUEST.value())
-                .status(HttpStatus.BAD_REQUEST.name())
-                .errors(List.of(ex.getMessage()))
-                .build();
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EmailExistsException.class)

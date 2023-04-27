@@ -1,6 +1,5 @@
 package com.pizzurg.api.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,14 +13,20 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class ProductVariation { //mudar para o nome ProductVariation
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String sizeName;
+
     private String description;
+
     @Builder.Default
     private Boolean available = true;
+
     private BigDecimal price;
+
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;

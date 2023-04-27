@@ -24,4 +24,5 @@ public interface UserMapper {
 
     @Named("mapRoleToRoleDto")
     RecoveryRoleDto mapRoleToRoleDto(Role role);
+
 }

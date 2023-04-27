@@ -11,11 +11,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ApplicationRunnerImpl implements ApplicationRunner {
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private UserRepository userRepository;
+
     private static final String EMAIL = "admin@email.com";
+
     private static final String PASSWORD = "12345678";
 
 
@@ -27,10 +31,10 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
             throw new Exception("Erro ao criar usuário admin", e);
         }
     }
+
     private void createAdminUser() {
         if (userRepository.findByEmail(EMAIL).isEmpty()) {
             userService.createUser(new CreateUserDto(EMAIL, PASSWORD), RoleName.ROLE_ADMINISTRATOR);
         }
     }
-
 }

@@ -22,4 +22,5 @@ public class RoleService {
         Role role = Role.builder().name(roleName).build();
         return roleRepository.save(role);
     }
+
 }

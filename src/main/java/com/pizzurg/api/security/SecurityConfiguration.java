@@ -20,12 +20,16 @@ public class SecurityConfiguration {
 
     @Autowired
     private AuthorizationFilter authorizationFilter;
+
     private static final String ROLE_ADMINISTRATOR = "ADMINISTRATOR";
+
     private static final String ROLE_EMPLOYEE = "EMPLOYEE";
+
     public static final String [] NO_AUTH_ENDPOINTS = {
             "/users/customers",
             "/users/login"
     };
+
     private static final String [] ENDPOINTS_PRODUCT = {
             "/products",
             "/products/{productId}",
@@ -41,15 +45,18 @@ public class SecurityConfiguration {
             "/orders/status/{statusName}",
             "/orders/{orderId}/status"
     };
+
     private static final String [] PRIVATE_ENDPOINTS_PRODUCT = {
             "/products",
             "/products/{productId}",
             "/products/{productId}/sizes/{productVariantId}"
     };
+
     private static final String [] PRIVATE_ENDPOINTS_ADMINISTRATOR = {
             "/users/employees",
             "/users/{productId}"
     };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf().disable()
@@ -64,10 +71,12 @@ public class SecurityConfiguration {
                 .and().addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

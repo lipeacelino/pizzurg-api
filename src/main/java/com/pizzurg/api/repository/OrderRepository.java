@@ -23,4 +23,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findByStatus(Status statusName, Pageable pageable);
 
     Page<Order> findAll(Pageable pageable);
+
 }

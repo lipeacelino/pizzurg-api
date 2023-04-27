@@ -12,6 +12,7 @@ import java.time.*;
 public class TokenJwtService {
 
     private static final String SECRET_KEY = "4Z^XrroxR@dWxqf$mTTKwW$!@#qGr4P";
+
     private static final String ISSUER = "pizzurg-api";
 
     public String generateToken(UserDetailsImpl user) {

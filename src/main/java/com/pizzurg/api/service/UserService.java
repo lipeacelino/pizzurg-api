@@ -22,14 +22,19 @@ import java.util.List;
 
 @Service
 public class UserService {
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private RoleService roleService;
+
     @Autowired
     private SecurityConfiguration securityConfiguration;
+
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private TokenJwtService tokenJwtService;
 
@@ -59,10 +64,12 @@ public class UserService {
         }
         return true;
     }
+
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundException();
         }
         userRepository.deleteById(id);
     }
+
 }

@@ -1,4 +1,10 @@
 package com.pizzurg.api.dto.input.product;
 
-public record SearchProductDto(String name) {
+import jakarta.validation.constraints.NotBlank;
+
+public record SearchProductDto(
+
+        @NotBlank(message = "{not.blank.message}")
+        String name
+) {
 }

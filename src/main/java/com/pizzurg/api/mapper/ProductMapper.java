@@ -15,21 +15,23 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
-    @Mapping(source = "productVariationList", target = "productVariations", qualifiedByName = "recoveryProductVariationDtoListFromProductVariationList")
+
+    @Mapping(source = "productVariationList", target = "productVariations", qualifiedByName = "mapProductVariationToRecoveryProductVariationDto")
     @Mapping(source = "category", target = "category", qualifiedByName = "categoryEnumToString")
-    RecoveryProductDto recoveryProductDtoFromProduct(Product product);
+    RecoveryProductDto mapProductToRecoveryProductDto(Product product);
 
-    @Named("recoveryProductVariationDtoListFromProductVariationList")
-    @IterableMapping(qualifiedByName = "recoveryProductVariationDtoFromProductVariation")
-    List<RecoveryProductVariationDto> recoveryProductVariationDtoListFromProductVariationList(List<ProductVariation> productVariation);
+    @Named("mapProductVariationToRecoveryProductVariationDto")
+    @IterableMapping(qualifiedByName = "mapProductVariationToRecoveryProductVariationDto")
+    List<RecoveryProductVariationDto> mapProductVariationToRecoveryProductVariationDto(List<ProductVariation> productVariation);
 
-    @Named("recoveryProductVariationDtoFromProductVariation")
-    RecoveryProductVariationDto recoveryProductVariationDtoFromProductVariation(ProductVariation productVariation);
+    @Named("mapProductVariationToRecoveryProductVariationDto")
+    RecoveryProductVariationDto mapProductVariationToRecoveryProductVariationDto(ProductVariation productVariation);
 
-    ProductVariation productVariationFromCreateProductVariationDto(CreateProductVariationDto createProductVariationDto);
+    ProductVariation mapCreateProductVariationDtoToProductVariation(CreateProductVariationDto createProductVariationDto);
 
     @Named("categoryEnumToString")
     default String categoryEnumToString(Category category) {
         return category.getName();
     }
+
 }

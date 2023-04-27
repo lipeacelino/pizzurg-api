@@ -89,4 +89,5 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         objectMapper.findAndRegisterModules();
         return objectMapper.writeValueAsString(object);
     }
+
 }

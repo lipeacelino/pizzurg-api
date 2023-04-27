@@ -5,6 +5,7 @@ import com.pizzurg.api.dto.input.order.CreateOrderDto;
 import com.pizzurg.api.dto.input.order.CreateOrderItemDto;
 import com.pizzurg.api.dto.output.order.RecoveryOrderDto;
 import com.pizzurg.api.entity.*;
+import com.pizzurg.api.enums.MethodPayment;
 import com.pizzurg.api.enums.RoleName;
 import com.pizzurg.api.enums.Status;
 import com.pizzurg.api.exception.OrderNotFoundByUserException;
@@ -19,7 +20,6 @@ import com.pizzurg.api.security.TokenJwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -84,7 +84,7 @@ public class OrderService {
         //monta o order com todos os itens das ordens
         Order order = Order.builder()
                 .user(user)
-                .methodPayment(createOrderDto.methodPayment())
+                .methodPayment(MethodPayment.valueOf(createOrderDto.methodPayment().toUpperCase()))
                 .orderItemList(orderItemList)
                 .amount(amount)
                 .deliveryData(deliveryData)
@@ -139,4 +139,5 @@ public class OrderService {
         order.setStatus(Status.valueOf(changeStatusOrderDto.status().toUpperCase()));
         return orderMapper.mapOrderToRecoveryOrderDto(order);
     }
+
 }

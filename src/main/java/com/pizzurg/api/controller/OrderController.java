@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -37,7 +35,7 @@ public class OrderController {
 
     @GetMapping("/status/{statusName}")
     public ResponseEntity<Page<RecoveryOrderDto>> getOrderByStatus(
-            @PageableDefault(size = 5)
+            @PageableDefault(size = 8)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "createdDate", direction = Sort.Direction.DESC), //Critério de ordenação
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
@@ -55,7 +53,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<Page<RecoveryOrderDto>> getAllOrders(
-            @PageableDefault(size = 5)
+            @PageableDefault(size = 8)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "createdDate", direction = Sort.Direction.DESC), //Critério de ordenação
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
