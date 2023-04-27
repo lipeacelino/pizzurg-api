@@ -9,6 +9,6 @@ public record CreateOrderDto(
 
         MethodPayment methodPayment,
 
-        CreateDeliveryData deliveryData
+        CreateDeliveryDataDto deliveryData
 ) {
 }

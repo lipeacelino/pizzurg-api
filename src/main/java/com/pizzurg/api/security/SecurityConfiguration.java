@@ -36,7 +36,10 @@ public class SecurityConfiguration {
     };
 
     private static final String [] ENDPOINTS_ORDER = {
-            "/orders"
+            "/orders",
+            "/orders/{orderId}",
+            "/orders/status/{statusName}",
+            "/orders/{orderId}/status"
     };
     private static final String [] PRIVATE_ENDPOINTS_PRODUCT = {
             "/products",

@@ -49,7 +49,8 @@ public class ProductController {
                     @SortDefault(sort = "name", direction = Sort.Direction.ASC), //Critério de ordenação
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
             Pageable pageable,
-            @PathVariable String categoryName) {
+            @PathVariable String categoryName
+    ) {
         return new ResponseEntity<>(productService.recoveryProductsByCategory(categoryName, pageable), HttpStatus.OK);
     }
 

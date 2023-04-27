@@ -18,12 +18,16 @@ public interface ProductMapper {
     @Mapping(source = "productVariationList", target = "productVariations", qualifiedByName = "recoveryProductVariationDtoListFromProductVariationList")
     @Mapping(source = "category", target = "category", qualifiedByName = "categoryEnumToString")
     RecoveryProductDto recoveryProductDtoFromProduct(Product product);
+
     @Named("recoveryProductVariationDtoListFromProductVariationList")
     @IterableMapping(qualifiedByName = "recoveryProductVariationDtoFromProductVariation")
     List<RecoveryProductVariationDto> recoveryProductVariationDtoListFromProductVariationList(List<ProductVariation> productVariation);
+
     @Named("recoveryProductVariationDtoFromProductVariation")
     RecoveryProductVariationDto recoveryProductVariationDtoFromProductVariation(ProductVariation productVariation);
+
     ProductVariation productVariationFromCreateProductVariationDto(CreateProductVariationDto createProductVariationDto);
+
     @Named("categoryEnumToString")
     default String categoryEnumToString(Category category) {
         return category.getName();

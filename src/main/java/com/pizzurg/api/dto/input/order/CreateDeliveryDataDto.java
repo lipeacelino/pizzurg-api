@@ -1,6 +1,6 @@
 package com.pizzurg.api.dto.input.order;
 
-public record CreateDeliveryData(
+public record CreateDeliveryDataDto(
         String receiverName,
         String address,
         String number,

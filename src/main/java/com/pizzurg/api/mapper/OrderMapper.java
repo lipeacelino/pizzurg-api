@@ -15,9 +15,14 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface OrderMapper {
+
+    @IterableMapping(qualifiedByName = "mapOrderToRecoveryOrderDto")
+    List<RecoveryOrderDto> mapOrderListToRecoveryOrderDtoList(List<Order> order);
+
     @Mapping(qualifiedByName = "mapDeliveryDataToRecoveryDeliveryData", target = "deliveryData")
     @Mapping(qualifiedByName = "mapOrderItemListToRecoveryOrderItemDtoList", source = "orderItemList", target = "orderItems")
     @Mapping(qualifiedByName = "mapUserToUserDto", target = "user")
+    @Named("mapOrderToRecoveryOrderDto")
     RecoveryOrderDto mapOrderToRecoveryOrderDto(Order order);
 
     @IterableMapping(qualifiedByName = "mapOrderItemToRecoveryOrderItemDto")

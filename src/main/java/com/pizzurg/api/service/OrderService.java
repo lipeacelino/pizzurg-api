@@ -1,9 +1,15 @@
 package com.pizzurg.api.service;
 
+import com.pizzurg.api.dto.input.order.ChangeStatusOrderDto;
 import com.pizzurg.api.dto.input.order.CreateOrderDto;
 import com.pizzurg.api.dto.input.order.CreateOrderItemDto;
 import com.pizzurg.api.dto.output.order.RecoveryOrderDto;
 import com.pizzurg.api.entity.*;
+import com.pizzurg.api.enums.RoleName;
+import com.pizzurg.api.enums.Status;
+import com.pizzurg.api.exception.OrderNotFoundByUserException;
+import com.pizzurg.api.exception.OrderNotFoundException;
+import com.pizzurg.api.exception.ProductVariationNotFoundException;
 import com.pizzurg.api.exception.UserNotFoundException;
 import com.pizzurg.api.mapper.OrderMapper;
 import com.pizzurg.api.repository.OrderRepository;
@@ -11,6 +17,8 @@ import com.pizzurg.api.repository.ProductVariationRepository;
 import com.pizzurg.api.repository.UserRepository;
 import com.pizzurg.api.security.TokenJwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +52,7 @@ public class OrderService {
             //verifica se a variação de produto existe
             ProductVariation productVariation = productVariationRepository
                     .findByIdAndProductId(createOrderItemDto.productVariationId(), createOrderItemDto.productId())
-                    .orElseThrow(() -> new RuntimeException("ProductVariation não encontrado."));
+                    .orElseThrow(ProductVariationNotFoundException::new);
 
             //multiplica a quantidade de itens pelo preço e adiciona ao valor total
             amount = amount.add(productVariation.getPrice().multiply(new BigDecimal(createOrderItemDto.quantity())));
@@ -71,8 +79,7 @@ public class OrderService {
                 .build();
 
         //obtém usuário através do token
-        String subject = tokenJwtService.getSubjectFromToken(token.replace("Bearer ", ""));
-        User user = userRepository.findByEmail(subject).orElseThrow(UserNotFoundException::new);
+        User user = getUser(token);
 
         //monta o order com todos os itens das ordens
         Order order = Order.builder()
@@ -90,5 +97,46 @@ public class OrderService {
         deliveryData.setOrder(order);
 
         return orderMapper.mapOrderToRecoveryOrderDto(orderRepository.save(order));
+    }
+
+    public RecoveryOrderDto getOrder(String token, Long orderId) {
+        User user = getUser(token);
+
+        //se tiver role de admin deve mostrar tudo, se não, mostrar os pedidos apenas do usuário atual
+        if (user.getRoleList().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
+            return orderMapper.mapOrderToRecoveryOrderDto(orderRepository
+                    .findByUserIdAndOrderId(orderId, user.getId())
+                    .orElseThrow(OrderNotFoundByUserException::new));
+        }
+        return orderMapper.mapOrderToRecoveryOrderDto(orderRepository.findById(orderId)
+                .orElseThrow(OrderNotFoundException::new));
+    }
+
+    public Page<RecoveryOrderDto> getAllOrders(String token, Pageable pageable) {
+        User user = getUser(token);
+
+        //se tiver role de admin deve mostrar tudo, se não, mostrar os pedidos apenas do usuário atual
+        if (user.getRoleList().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
+            Page<Order> orderPage = orderRepository.findAllByUserId(user.getId(), pageable);
+            return orderPage.map(order -> orderMapper.mapOrderToRecoveryOrderDto(order));
+        }
+        Page<Order> orderPage = orderRepository.findAll(pageable);
+        return orderPage.map(order -> orderMapper.mapOrderToRecoveryOrderDto(order));
+    }
+
+    public Page<RecoveryOrderDto> getOrderByStatus(String statusName, Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findByStatus(Status.valueOf(statusName.toUpperCase()), pageable);
+        return orderPage.map(order -> orderMapper.mapOrderToRecoveryOrderDto(order));
+    }
+
+    private User getUser(String token) {
+        String subject = tokenJwtService.getSubjectFromToken(token.replace("Bearer ", ""));
+        return userRepository.findByEmail(subject).orElseThrow(UserNotFoundException::new);
+    }
+
+    public RecoveryOrderDto changeOrderStatus(Long orderId, ChangeStatusOrderDto changeStatusOrderDto) {
+        Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundByUserException::new);
+        order.setStatus(Status.valueOf(changeStatusOrderDto.status().toUpperCase()));
+        return orderMapper.mapOrderToRecoveryOrderDto(order);
     }
 }
