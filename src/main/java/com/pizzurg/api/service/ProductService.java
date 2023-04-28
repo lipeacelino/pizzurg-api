@@ -12,8 +12,6 @@ import com.pizzurg.api.exception.ProductVariationUnavailableException;
 import com.pizzurg.api.mapper.ProductMapper;
 import com.pizzurg.api.repository.ProductRepository;
 import com.pizzurg.api.repository.ProductVariationRepository;
-import com.pizzurg.api.service.strategy.product.ProductUpdate;
-import com.pizzurg.api.service.strategy.productvariation.ProductVariationUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,12 +32,6 @@ public class ProductService {
     @Autowired
     private ProductMapper productMapper;
 
-    @Autowired
-    private List<ProductUpdate> productUpdateList;
-
-    @Autowired
-    private List<ProductVariationUpdate> productVariationUpdateList;
-
     public RecoveryProductDto createProduct(CreateProductDto productDto) {
         List<ProductVariation> productVariationList =  productDto.productVariations().stream()
                 .map(productVariationDto -> productMapper.mapCreateProductVariationDtoToProductVariation(productVariationDto))
@@ -49,8 +41,6 @@ public class ProductService {
                 .description(productDto.description())
                 .category(removeAccentsAndReturnTypeCategoryEnum(productDto.category()))
                 .productVariationList(productVariationList)
-                //verifica se algum valor foi passado para o available, se não ele seta com true por padrão
-//                .available((productDto.available()!=null) ? productDto.available() : true)
                 .available(productDto.available())
                 .build();
 
@@ -102,8 +92,22 @@ public class ProductService {
     public RecoveryProductDto updateProductPart(Long productId, UpdateProductDto updateProductDto) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
 
-        //invocando todas as estratégias que foram criadas para atualizar um produto
-        productUpdateList.forEach(productUpdate -> productUpdate.update(product, updateProductDto));
+        if (updateProductDto.name() != null) {
+            product.setName(updateProductDto.name());
+        }
+        if (updateProductDto.description() != null) {
+            product.setDescription(updateProductDto.description());
+        }
+        if (updateProductDto.available() != null) {
+            product.setAvailable(updateProductDto.available());
+
+            /*se o product estiver com o available = false, todos os productVariation devem ser setados com available false também,
+            porque não faria sentido o produto estar estar indisponível e os tamanhos daquele produto estarem disponíveis*/
+            if (!product.getAvailable()) {
+                product.getProductVariationList().forEach(productVariation -> productVariation.setAvailable(false));
+            }
+        }
+
         return productMapper.mapProductToRecoveryProductDto(productRepository.save(product));
     }
 
@@ -115,7 +119,21 @@ public class ProductService {
                 .findFirst()
                 .orElseThrow(ProductVariationNotFoundException::new);
 
-        productVariationUpdateList.forEach(productVariationUpdate -> productVariationUpdate.update(productVariation, updateProductVariationDto));
+        if (updateProductVariationDto.sizeName() != null) {
+            productVariation.setSizeName(updateProductVariationDto.sizeName());
+        }
+        if (updateProductVariationDto.description() != null) {
+            productVariation.setDescription(updateProductVariationDto.description());
+        }
+        if (updateProductVariationDto.available() != null) {
+            if (updateProductVariationDto.available() && !productVariation.getProduct().getAvailable()) {
+                throw new ProductVariationUnavailableException();
+            }
+            productVariation.setAvailable(updateProductVariationDto.available());
+        }
+        if (updateProductVariationDto.price() != null) {
+            productVariation.setPrice(updateProductVariationDto.price());
+        }
 
         Product productSaved = productRepository.save(product);
         return productMapper.mapProductToRecoveryProductDto(productSaved);
