@@ -3,10 +3,16 @@ package com.pizzurg.api.controller;
 import com.pizzurg.api.dto.input.user.CreateUserDto;
 import com.pizzurg.api.dto.input.user.LoginUserDto;
 import com.pizzurg.api.dto.output.auth.TokenJwtDto;
+import com.pizzurg.api.dto.output.user.RecoveryUserDto;
 import com.pizzurg.api.enums.RoleName;
 import com.pizzurg.api.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +35,23 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @GetMapping
+    public ResponseEntity<Page<RecoveryUserDto>> recoveryUsers(
+            @PageableDefault(size = 8)
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
+            Pageable pageable) {
+        return new ResponseEntity<>(userService.recoveryUsers(pageable), HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<RecoveryUserDto> recoveryUserById(@PathVariable Long userId) {
+        return new ResponseEntity<>(userService.recoveryUserById(userId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

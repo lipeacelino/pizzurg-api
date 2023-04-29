@@ -115,7 +115,7 @@ public class OrderService {
     public Page<RecoveryOrderDto> getAllOrders(String token, Pageable pageable) {
         User user = getUser(token);
 
-        //se tiver role de admin deve mostrar tudo, se não, mostrar apenas os pedidos que pertencem ao usuário atual
+        //se tiver role de customer deve mostrar apenas os pedidos que pertencem ao usuário atual. Se não, deve mostrar tudo.
         if (user.getRoleList().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
             Page<Order> orderPage = orderRepository.findAllByUserId(user.getId(), pageable);
             return orderPage.map(order -> orderMapper.mapOrderToRecoveryOrderDto(order));
@@ -124,7 +124,14 @@ public class OrderService {
         return orderPage.map(order -> orderMapper.mapOrderToRecoveryOrderDto(order));
     }
 
-    public Page<RecoveryOrderDto> getOrderByStatus(String statusName, Pageable pageable) {
+    public Page<RecoveryOrderDto> getOrderByStatus(String statusName, String token, Pageable pageable) {
+        User user = getUser(token);
+
+        //se tiver role de customer deve mostrar apenas os pedidos que pertencem ao usuário atual. Se não, deve mostrar tudo.
+        if (user.getRoleList().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
+            Page<Order> orderPage = orderRepository.findOrderByStatusAndUser(Status.valueOf(statusName.toUpperCase()), user.getId(), pageable);
+            return orderPage.map(order -> orderMapper.mapOrderToRecoveryOrderDto(order));
+        }
         Page<Order> orderPage = orderRepository.findByStatus(Status.valueOf(statusName.toUpperCase()), pageable);
         return orderPage.map(order -> orderMapper.mapOrderToRecoveryOrderDto(order));
     }
@@ -140,4 +147,10 @@ public class OrderService {
         return orderMapper.mapOrderToRecoveryOrderDto(orderRepository.save(order));
     }
 
+    public void deleteOrderById(Long orderId) {
+        if (!orderRepository.existsById(orderId)) {
+            throw new OrderNotFoundException();
+        }
+        orderRepository.deleteById(orderId);
+    }
 }

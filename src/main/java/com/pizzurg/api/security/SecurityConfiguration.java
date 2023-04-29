@@ -33,7 +33,6 @@ public class SecurityConfiguration {
             "/products/{productId}", //get
             "/products/category/{categoryName}", //get
             "/products/search", //get
-            "/{productId}", //get
             "/orders", //get
             "/orders/{orderId}", //get
             "/orders/status/{statusName}" //get
@@ -41,6 +40,12 @@ public class SecurityConfiguration {
 
     private static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED_TO_POST_STATUS = {
             "/orders" //post
+    };
+
+    //endpois do administrador
+    private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_GET_STATUS = {
+            "/users",
+            "/users/{userId}"
     };
 
     private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_POST_STATUS = {
@@ -60,36 +65,9 @@ public class SecurityConfiguration {
     private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_DELETE_STATUS = {
             "/users/{userId}",//delete
             "/products/{productId}", //delete
-            "/{productId}/variation/{productVariationId}" //delete
+            "/products/{productId}/variation/{productVariationId}", //delete
+            "/orders/{productId}"
     };
-
-//    private static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
-//            //endpoints dos produtos
-//            "/products", //get
-//            "/products/{productId}", //get
-//            "/products/category/{categoryName}", //get
-//            "/products/search", //get
-//            "/{productId}", //get
-//
-//            //endpoints das ordens
-//            "/orders", //post //get
-//            "/orders/{orderId}", //get
-//            "/orders/status/{statusName}" //get
-//    };
-
-//    private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY = {
-//            //endpoints de usuários
-//            "/users/{userId}",//delete
-//
-//            //endpoints dos produtos
-//            "/products", //post
-//            "/products/{productId}", //delete
-//            "/products/{productId}/variation", //post
-//            "/{productId}/variation/{productVariationId}", //put //delete
-//
-//            //endpoints das ordens
-//            "/orders/{orderId}/status" //patch
-//    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -99,6 +77,7 @@ public class SecurityConfiguration {
                 .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                 .requestMatchers(HttpMethod.GET, ENDPOINTS_WITH_AUTHENTICATION_REQUIRED_TO_GET_STATUS).authenticated()
                 .requestMatchers(HttpMethod.POST, ENDPOINTS_WITH_AUTHENTICATION_REQUIRED_TO_POST_STATUS).authenticated()
+                .requestMatchers(HttpMethod.GET, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_GET_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
                 .requestMatchers(HttpMethod.POST, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_POST_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
                 .requestMatchers(HttpMethod.PUT, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_PUT_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
                 .requestMatchers(HttpMethod.PATCH, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_PATCH_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)

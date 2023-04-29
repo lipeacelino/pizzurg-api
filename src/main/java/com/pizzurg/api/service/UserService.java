@@ -1,7 +1,12 @@
 package com.pizzurg.api.service;
 
+import com.pizzurg.api.dto.output.order.RecoveryOrderDto;
+import com.pizzurg.api.dto.output.user.RecoveryUserDto;
 import com.pizzurg.api.exception.EmailExistsException;
+import com.pizzurg.api.exception.UserAssociatedWithOrder;
 import com.pizzurg.api.exception.UserNotFoundException;
+import com.pizzurg.api.mapper.UserMapper;
+import com.pizzurg.api.repository.OrderRepository;
 import com.pizzurg.api.security.SecurityConfiguration;
 import com.pizzurg.api.security.TokenJwtService;
 import com.pizzurg.api.security.UserDetailsImpl;
@@ -12,6 +17,8 @@ import com.pizzurg.api.entity.User;
 import com.pizzurg.api.enums.RoleName;
 import com.pizzurg.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,6 +45,12 @@ public class UserService {
     @Autowired
     private TokenJwtService tokenJwtService;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
     public TokenJwtDto authenticateUser(LoginUserDto loginUserDto) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUserDto.email(), loginUserDto.password());
@@ -46,7 +59,6 @@ public class UserService {
         return new TokenJwtDto(tokenJwtService.generateToken(userDetails));
     }
 
-    @Transactional
     public void createUser(CreateUserDto createUserDto, RoleName roleName) {
         if (checkIfEmailNotExists(createUserDto.email())) {
             User newUser = User.builder()
@@ -58,6 +70,16 @@ public class UserService {
         }
     }
 
+    public Page<RecoveryUserDto> recoveryUsers(Pageable pageable) {
+        Page<User> userPage = userRepository.findAll(pageable);
+        return userPage.map(user -> userMapper.mapUserToUserDto(user));
+    }
+
+    public RecoveryUserDto recoveryUserById(Long userId) {
+        return userMapper.mapUserToUserDto(userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new));
+    }
+
     private boolean checkIfEmailNotExists(String email) {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new EmailExistsException();
@@ -65,11 +87,14 @@ public class UserService {
         return true;
     }
 
-    public void deleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
+    public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException();
         }
-        userRepository.deleteById(id);
+        if(orderRepository.findFirstByUserId(userId).isPresent()) {
+            throw new UserAssociatedWithOrder();
+        }
+        userRepository.deleteById(userId);
     }
 
 }

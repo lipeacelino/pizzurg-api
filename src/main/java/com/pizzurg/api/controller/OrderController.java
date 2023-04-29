@@ -40,9 +40,10 @@ public class OrderController {
                     @SortDefault(sort = "createdDate", direction = Sort.Direction.DESC), //Critério de ordenação
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
             Pageable pageable,
-            @PathVariable String statusName
+            @PathVariable String statusName,
+            @RequestHeader("Authorization") String token
     ) {
-        return new ResponseEntity<>(orderService.getOrderByStatus(statusName, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.getOrderByStatus(statusName, token, pageable), HttpStatus.OK);
     }
 
     @PatchMapping("/{orderId}/status")
@@ -63,4 +64,9 @@ public class OrderController {
         return new ResponseEntity<>(orderService.getAllOrders(token, pageable), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<Void> deleteOrderById(@PathVariable Long orderId) {
+        orderService.deleteOrderById(orderId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

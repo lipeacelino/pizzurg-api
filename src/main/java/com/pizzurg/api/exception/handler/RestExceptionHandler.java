@@ -27,6 +27,19 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler({ProductVariationUnavailableException.class,
+            UserAssociatedWithOrder.class})
+    public ResponseEntity<ApiError> forbidenException(Exception ex) {
+        ApiError apiError = ApiError
+                .builder()
+                .timestamp(LocalDateTime.now())
+                .code(HttpStatus.FORBIDDEN.value())
+                .status(HttpStatus.FORBIDDEN.name())
+                .errors(List.of(ex.getMessage()))
+                .build();
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiError> badCredentialsException(BadCredentialsException ex) {
         ApiError apiError = ApiError
@@ -43,8 +56,7 @@ public class RestExceptionHandler {
             ProductNotFoundException.class,
             ProductVariationNotFoundException.class,
             OrderNotFoundException.class,
-            OrderNotFoundByUserException.class,
-            ProductVariationUnavailableException.class})
+            OrderNotFoundByUserException.class})
     public ResponseEntity<ApiError> notFoundException(RuntimeException ex) {
         ApiError apiError = ApiError
                 .builder()

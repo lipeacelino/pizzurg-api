@@ -2,6 +2,7 @@ package com.pizzurg.api.entity;
 
 import com.pizzurg.api.enums.Category;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;

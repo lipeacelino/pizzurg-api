@@ -1,6 +1,7 @@
 package com.pizzurg.api.repository;
 
 import com.pizzurg.api.entity.Order;
+import com.pizzurg.api.entity.User;
 import com.pizzurg.api.enums.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +21,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("select o from Order o where o.user.id = :userId")
     Page<Order> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
 
+    @Query("select o from Order o where o.status = :status and o.user.id = :userId")
+    Page<Order> findOrderByStatusAndUser(@Param("status") Status status, @Param("userId") Long userId, Pageable pageable);
+
     Page<Order> findByStatus(Status statusName, Pageable pageable);
 
     Page<Order> findAll(Pageable pageable);
+
+    @Query(nativeQuery = true, value = "select o.* from orders o join users u on o.user_id = u.id where u.id = :userId limit 1")
+    Optional<Order> findFirstByUserId(@Param("userId") Long userId);
 
 }
