@@ -1,7 +1,6 @@
-package com.pizzurg.api.repository;
+package com.pizzurg.api.repositories;
 
-import com.pizzurg.api.entity.Order;
-import com.pizzurg.api.entity.User;
+import com.pizzurg.api.entities.Order;
 import com.pizzurg.api.enums.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

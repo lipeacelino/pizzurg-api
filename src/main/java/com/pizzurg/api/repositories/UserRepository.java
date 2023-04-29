@@ -1,6 +1,6 @@
-package com.pizzurg.api.repository;
+package com.pizzurg.api.repositories;
 
-import com.pizzurg.api.entity.User;
+import com.pizzurg.api.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

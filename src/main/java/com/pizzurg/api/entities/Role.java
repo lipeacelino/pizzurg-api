@@ -1,4 +1,4 @@
-package com.pizzurg.api.entity;
+package com.pizzurg.api.entities;
 
 import com.pizzurg.api.enums.RoleName;
 import jakarta.persistence.*;

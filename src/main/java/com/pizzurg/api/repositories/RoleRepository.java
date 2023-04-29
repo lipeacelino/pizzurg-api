@@ -1,6 +1,6 @@
-package com.pizzurg.api.repository;
+package com.pizzurg.api.repositories;
 
-import com.pizzurg.api.entity.Role;
+import com.pizzurg.api.entities.Role;
 import com.pizzurg.api.enums.RoleName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

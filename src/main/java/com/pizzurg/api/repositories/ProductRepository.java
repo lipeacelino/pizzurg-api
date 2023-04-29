@@ -1,6 +1,6 @@
-package com.pizzurg.api.repository;
+package com.pizzurg.api.repositories;
 
-import com.pizzurg.api.entity.Product;
+import com.pizzurg.api.entities.Product;
 import com.pizzurg.api.enums.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -2,8 +2,8 @@ package com.pizzurg.api.config;
 
 import com.pizzurg.api.dto.input.user.CreateUserDto;
 import com.pizzurg.api.enums.RoleName;
-import com.pizzurg.api.repository.UserRepository;
-import com.pizzurg.api.service.UserService;
+import com.pizzurg.api.repositories.UserRepository;
+import com.pizzurg.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

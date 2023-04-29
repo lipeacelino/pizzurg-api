@@ -1,4 +1,4 @@
-package com.pizzurg.api.exception.handler;
+package com.pizzurg.api.exception.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;

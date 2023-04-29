@@ -1,6 +1,6 @@
-package com.pizzurg.api.repository;
+package com.pizzurg.api.repositories;
 
-import com.pizzurg.api.entity.ProductVariation;
+import com.pizzurg.api.entities.ProductVariation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

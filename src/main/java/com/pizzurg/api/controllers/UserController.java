@@ -1,11 +1,11 @@
-package com.pizzurg.api.controller;
+package com.pizzurg.api.controllers;
 
 import com.pizzurg.api.dto.input.user.CreateUserDto;
 import com.pizzurg.api.dto.input.user.LoginUserDto;
 import com.pizzurg.api.dto.output.auth.TokenJwtDto;
 import com.pizzurg.api.dto.output.user.RecoveryUserDto;
 import com.pizzurg.api.enums.RoleName;
-import com.pizzurg.api.service.UserService;
+import com.pizzurg.api.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

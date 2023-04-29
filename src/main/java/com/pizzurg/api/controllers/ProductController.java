@@ -1,9 +1,8 @@
-package com.pizzurg.api.controller;
+package com.pizzurg.api.controllers;
 
 import com.pizzurg.api.dto.input.product.*;
 import com.pizzurg.api.dto.output.product.RecoveryProductDto;
-import com.pizzurg.api.dto.output.product.RecoveryProductVariationDto;
-import com.pizzurg.api.service.ProductService;
+import com.pizzurg.api.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

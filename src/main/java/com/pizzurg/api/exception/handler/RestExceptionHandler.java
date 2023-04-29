@@ -1,6 +1,7 @@
 package com.pizzurg.api.exception.handler;
 
 import com.pizzurg.api.exception.*;
+import com.pizzurg.api.exception.model.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;

@@ -1,9 +1,9 @@
-package com.pizzurg.api.mapper;
+package com.pizzurg.api.mappers;
 
 import com.pizzurg.api.dto.output.user.RecoveryRoleDto;
 import com.pizzurg.api.dto.output.user.RecoveryUserDto;
-import com.pizzurg.api.entity.Role;
-import com.pizzurg.api.entity.User;
+import com.pizzurg.api.entities.Role;
+import com.pizzurg.api.entities.User;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

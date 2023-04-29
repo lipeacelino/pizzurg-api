@@ -1,9 +1,9 @@
-package com.pizzurg.api.controller;
+package com.pizzurg.api.controllers;
 
 import com.pizzurg.api.dto.input.order.ChangeStatusOrderDto;
 import com.pizzurg.api.dto.input.order.CreateOrderDto;
 import com.pizzurg.api.dto.output.order.RecoveryOrderDto;
-import com.pizzurg.api.service.OrderService;
+import com.pizzurg.api.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,10 +1,10 @@
-package com.pizzurg.api.service;
+package com.pizzurg.api.services;
 
 import com.pizzurg.api.dto.input.order.ChangeStatusOrderDto;
 import com.pizzurg.api.dto.input.order.CreateOrderDto;
 import com.pizzurg.api.dto.input.order.CreateOrderItemDto;
 import com.pizzurg.api.dto.output.order.RecoveryOrderDto;
-import com.pizzurg.api.entity.*;
+import com.pizzurg.api.entities.*;
 import com.pizzurg.api.enums.MethodPayment;
 import com.pizzurg.api.enums.RoleName;
 import com.pizzurg.api.enums.Status;
@@ -12,10 +12,10 @@ import com.pizzurg.api.exception.OrderNotFoundByUserException;
 import com.pizzurg.api.exception.OrderNotFoundException;
 import com.pizzurg.api.exception.ProductVariationNotFoundException;
 import com.pizzurg.api.exception.UserNotFoundException;
-import com.pizzurg.api.mapper.OrderMapper;
-import com.pizzurg.api.repository.OrderRepository;
-import com.pizzurg.api.repository.ProductVariationRepository;
-import com.pizzurg.api.repository.UserRepository;
+import com.pizzurg.api.mappers.OrderMapper;
+import com.pizzurg.api.repositories.OrderRepository;
+import com.pizzurg.api.repositories.ProductVariationRepository;
+import com.pizzurg.api.repositories.UserRepository;
 import com.pizzurg.api.security.TokenJwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

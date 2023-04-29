@@ -1,21 +1,20 @@
-package com.pizzurg.api.service;
+package com.pizzurg.api.services;
 
-import com.pizzurg.api.dto.output.order.RecoveryOrderDto;
 import com.pizzurg.api.dto.output.user.RecoveryUserDto;
 import com.pizzurg.api.exception.EmailExistsException;
 import com.pizzurg.api.exception.UserAssociatedWithOrder;
 import com.pizzurg.api.exception.UserNotFoundException;
-import com.pizzurg.api.mapper.UserMapper;
-import com.pizzurg.api.repository.OrderRepository;
+import com.pizzurg.api.mappers.UserMapper;
+import com.pizzurg.api.repositories.OrderRepository;
 import com.pizzurg.api.security.SecurityConfiguration;
 import com.pizzurg.api.security.TokenJwtService;
 import com.pizzurg.api.security.UserDetailsImpl;
 import com.pizzurg.api.dto.output.auth.TokenJwtDto;
 import com.pizzurg.api.dto.input.user.LoginUserDto;
 import com.pizzurg.api.dto.input.user.CreateUserDto;
-import com.pizzurg.api.entity.User;
+import com.pizzurg.api.entities.User;
 import com.pizzurg.api.enums.RoleName;
-import com.pizzurg.api.repository.UserRepository;
+import com.pizzurg.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +22,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

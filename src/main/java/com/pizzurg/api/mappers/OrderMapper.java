@@ -1,11 +1,11 @@
-package com.pizzurg.api.mapper;
+package com.pizzurg.api.mappers;
 
 import com.pizzurg.api.dto.output.order.RecoveryDeliveryData;
 import com.pizzurg.api.dto.output.order.RecoveryOrderDto;
 import com.pizzurg.api.dto.output.order.RecoveryOrderItemDto;
-import com.pizzurg.api.entity.DeliveryData;
-import com.pizzurg.api.entity.Order;
-import com.pizzurg.api.entity.OrderItem;
+import com.pizzurg.api.entities.DeliveryData;
+import com.pizzurg.api.entities.Order;
+import com.pizzurg.api.entities.OrderItem;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

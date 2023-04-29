@@ -1,6 +1,6 @@
 package com.pizzurg.api.security;
 
-import com.pizzurg.api.entity.User;
+import com.pizzurg.api.entities.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

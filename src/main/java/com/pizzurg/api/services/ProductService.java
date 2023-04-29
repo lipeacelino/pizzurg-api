@@ -1,17 +1,16 @@
-package com.pizzurg.api.service;
+package com.pizzurg.api.services;
 
 import com.pizzurg.api.dto.input.product.*;
 import com.pizzurg.api.dto.output.product.RecoveryProductDto;
-import com.pizzurg.api.dto.output.product.RecoveryProductVariationDto;
-import com.pizzurg.api.entity.Product;
-import com.pizzurg.api.entity.ProductVariation;
+import com.pizzurg.api.entities.Product;
+import com.pizzurg.api.entities.ProductVariation;
 import com.pizzurg.api.enums.Category;
 import com.pizzurg.api.exception.ProductNotFoundException;
 import com.pizzurg.api.exception.ProductVariationNotFoundException;
 import com.pizzurg.api.exception.ProductVariationUnavailableException;
-import com.pizzurg.api.mapper.ProductMapper;
-import com.pizzurg.api.repository.ProductRepository;
-import com.pizzurg.api.repository.ProductVariationRepository;
+import com.pizzurg.api.mappers.ProductMapper;
+import com.pizzurg.api.repositories.ProductRepository;
+import com.pizzurg.api.repositories.ProductVariationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

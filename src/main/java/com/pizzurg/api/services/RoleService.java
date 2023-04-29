@@ -1,8 +1,8 @@
-package com.pizzurg.api.service;
+package com.pizzurg.api.services;
 
-import com.pizzurg.api.entity.Role;
+import com.pizzurg.api.entities.Role;
 import com.pizzurg.api.enums.RoleName;
-import com.pizzurg.api.repository.RoleRepository;
+import com.pizzurg.api.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

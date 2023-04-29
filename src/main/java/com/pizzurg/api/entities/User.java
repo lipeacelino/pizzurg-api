@@ -1,4 +1,4 @@
-package com.pizzurg.api.entity;
+package com.pizzurg.api.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,8 @@
 package com.pizzurg.api.security;
 
 import com.pizzurg.api.exception.UserNotFoundException;
-import com.pizzurg.api.entity.User;
-import com.pizzurg.api.repository.UserRepository;
+import com.pizzurg.api.entities.User;
+import com.pizzurg.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
