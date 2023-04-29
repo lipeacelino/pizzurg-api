@@ -56,7 +56,7 @@ public class ProductService {
         return productMapper.mapProductToRecoveryProductDto(productSaved);
     }
 
-    public RecoveryProductVariationDto createProductVariation(Long productId, CreateProductVariationDto createProductVariationDto) {
+    public RecoveryProductDto createProductVariation(Long productId, CreateProductVariationDto createProductVariationDto) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
 
         ProductVariation productVariation = productMapper.mapCreateProductVariationDtoToProductVariation(createProductVariationDto);
@@ -66,7 +66,7 @@ public class ProductService {
         product.getProductVariationList().add(productVariationSaved);
         productRepository.save(product);
 
-        return productMapper.mapProductVariationToRecoveryProductVariationDto(productVariationSaved);
+        return productMapper.mapProductToRecoveryProductDto(productVariationSaved.getProduct());
     }
 
     public Page<RecoveryProductDto> recoveryProducts(Pageable pageable) {
@@ -79,8 +79,8 @@ public class ProductService {
         return productPage.map(product -> productMapper.mapProductToRecoveryProductDto(product));
     }
 
-    public Page<RecoveryProductDto> recoveryProductsByNameContaining(SearchProductDto searchProductDto, Pageable pageable) {
-        Page<Product> productPage = productRepository.findByNameContaining(searchProductDto.name(), pageable);
+    public Page<RecoveryProductDto> recoveryProductsByName(String productName, Pageable pageable) {
+        Page<Product> productPage = productRepository.findByNameContaining(productName, pageable);
         return productPage.map(product -> productMapper.mapProductToRecoveryProductDto(product));
     }
 
@@ -146,14 +146,14 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
-    public void deleteProductVariation(Long productId, Long variationId) {
+    public void deleteProductVariation(Long productId, Long productVariationId) {
         if (!productRepository.existsById(productId)) {
             throw new ProductNotFoundException();
         }
-        if (!productVariationRepository.existsById(variationId)) {
+        if (!productVariationRepository.existsById(productVariationId)) {
             throw new ProductVariationNotFoundException();
         }
-        productVariationRepository.deleteById(variationId);
+        productVariationRepository.deleteById(productVariationId);
     }
 
     private Category removeAccentsAndReturnTypeCategoryEnum(String category) {

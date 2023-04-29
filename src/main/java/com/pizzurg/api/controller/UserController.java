@@ -3,7 +3,6 @@ package com.pizzurg.api.controller;
 import com.pizzurg.api.dto.input.user.CreateUserDto;
 import com.pizzurg.api.dto.input.user.LoginUserDto;
 import com.pizzurg.api.dto.output.auth.TokenJwtDto;
-import com.pizzurg.api.entity.Product;
 import com.pizzurg.api.enums.RoleName;
 import com.pizzurg.api.service.UserService;
 import jakarta.validation.Valid;
@@ -29,11 +28,7 @@ public class UserController {
         userService.createUser(createUserDto, RoleName.ROLE_CUSTOMER);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @PostMapping("/employees")
-    public ResponseEntity<Void> createEmployeeUser(@Valid @RequestBody CreateUserDto createUserDto) {
-        userService.createUser(createUserDto, RoleName.ROLE_EMPLOYEE);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

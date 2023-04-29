@@ -20,7 +20,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
     private static final String EMAIL = "admin@email.com";
 
-    private static final String PASSWORD = "12345678";
+    private static final String PASSWORD = "123456789";
 
 
     @Override

@@ -23,50 +23,86 @@ public class SecurityConfiguration {
 
     private static final String ROLE_ADMINISTRATOR = "ADMINISTRATOR";
 
-    private static final String ROLE_EMPLOYEE = "EMPLOYEE";
-
-    public static final String [] NO_AUTH_ENDPOINTS = {
-            "/users/customers",
-            "/users/login"
+    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
+            "/users/login",
+            "/users/customers"
     };
 
-    private static final String [] ENDPOINTS_PRODUCT = {
-            "/products",
-            "/products/{productId}",
-            "/products/category/{categoryName}",
-            "/products/search",
-            "/{productId}/variation/{variationId}",
-            "/{productId}"
+    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED_TO_GET_STATUS = {
+            "/products", //get
+            "/products/{productId}", //get
+            "/products/category/{categoryName}", //get
+            "/products/search", //get
+            "/{productId}", //get
+            "/orders", //get
+            "/orders/{orderId}", //get
+            "/orders/status/{statusName}" //get
     };
 
-    private static final String [] ENDPOINTS_ORDER = {
-            "/orders",
-            "/orders/{orderId}",
-            "/orders/status/{statusName}",
-            "/orders/{orderId}/status"
+    private static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED_TO_POST_STATUS = {
+            "/orders" //post
     };
 
-    private static final String [] PRIVATE_ENDPOINTS_PRODUCT = {
-            "/products",
-            "/products/{productId}",
-            "/products/{productId}/sizes/{productVariantId}"
+    private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_POST_STATUS = {
+            "/products", //post
+            "/products/{productId}/variation" //post
     };
 
-    private static final String [] PRIVATE_ENDPOINTS_ADMINISTRATOR = {
-            "/users/employees",
-            "/users/{productId}"
+    private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_PUT_STATUS = {
+            "/{productId}/variation/{productVariationId}" //put
     };
+
+    private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_PATCH_STATUS = {
+            "/products/{productId}", //patch
+            "/orders/{orderId}/status" //patch
+    };
+
+    private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_DELETE_STATUS = {
+            "/users/{userId}",//delete
+            "/products/{productId}", //delete
+            "/{productId}/variation/{productVariationId}" //delete
+    };
+
+//    private static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
+//            //endpoints dos produtos
+//            "/products", //get
+//            "/products/{productId}", //get
+//            "/products/category/{categoryName}", //get
+//            "/products/search", //get
+//            "/{productId}", //get
+//
+//            //endpoints das ordens
+//            "/orders", //post //get
+//            "/orders/{orderId}", //get
+//            "/orders/status/{statusName}" //get
+//    };
+
+//    private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY = {
+//            //endpoints de usuários
+//            "/users/{userId}",//delete
+//
+//            //endpoints dos produtos
+//            "/products", //post
+//            "/products/{productId}", //delete
+//            "/products/{productId}/variation", //post
+//            "/{productId}/variation/{productVariationId}", //put //delete
+//
+//            //endpoints das ordens
+//            "/orders/{orderId}/status" //patch
+//    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, NO_AUTH_ENDPOINTS).permitAll()
-                .requestMatchers(HttpMethod.GET, ENDPOINTS_PRODUCT).authenticated()
-                .requestMatchers(PRIVATE_ENDPOINTS_PRODUCT).hasAnyRole(ROLE_ADMINISTRATOR, ROLE_EMPLOYEE)
-                .requestMatchers(PRIVATE_ENDPOINTS_ADMINISTRATOR).hasRole(ROLE_ADMINISTRATOR)
-                .requestMatchers(ENDPOINTS_ORDER).authenticated()
+                .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
+                .requestMatchers(HttpMethod.GET, ENDPOINTS_WITH_AUTHENTICATION_REQUIRED_TO_GET_STATUS).authenticated()
+                .requestMatchers(HttpMethod.POST, ENDPOINTS_WITH_AUTHENTICATION_REQUIRED_TO_POST_STATUS).authenticated()
+                .requestMatchers(HttpMethod.POST, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_POST_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
+                .requestMatchers(HttpMethod.PUT, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_PUT_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
+                .requestMatchers(HttpMethod.PATCH, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_PATCH_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
+                .requestMatchers(HttpMethod.DELETE, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_DELETE_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
                 .anyRequest().denyAll()
                 .and().addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
