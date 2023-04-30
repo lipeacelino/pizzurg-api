@@ -15,12 +15,12 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-    @Mapping(source = "getProductVariations", target = "productVariations", qualifiedByName = "mapProductVariationToRecoveryProductVariationDto")
+    @Mapping(target = "productVariations", qualifiedByName = "mapProductVariationToRecoveryProductVariationDto")
     RecoveryProductDto mapProductToRecoveryProductDto(Product product);
 
     @Named("mapProductVariationToRecoveryProductVariationDto")
     @IterableMapping(qualifiedByName = "mapProductVariationToRecoveryProductVariationDto")
-    List<RecoveryProductVariationDto> mapProductVariationToRecoveryProductVariationDto(List<ProductVariation> productVariation);
+    List<RecoveryProductVariationDto> mapProductVariationToRecoveryProductVariationDto(List<ProductVariation> productVariations);
 
     @Named("mapProductVariationToRecoveryProductVariationDto")
     RecoveryProductVariationDto mapProductVariationToRecoveryProductVariationDto(ProductVariation productVariation);

@@ -18,14 +18,14 @@ public interface OrderMapper {
 
 
     @Mapping(qualifiedByName = "mapDeliveryDataToRecoveryDeliveryData", target = "deliveryData")
-    @Mapping(qualifiedByName = "mapOrderItemListToRecoveryOrderItemDtoList", source = "getOrderItems", target = "orderItems")
+    @Mapping(qualifiedByName = "mapOrderItemListToRecoveryOrderItemDtoList", target = "orderItems")
     @Mapping(qualifiedByName = "mapUserToUserDto", target = "user")
     @Named("mapOrderToRecoveryOrderDto")
     RecoveryOrderDto mapOrderToRecoveryOrderDto(Order order);
 
     @IterableMapping(qualifiedByName = "mapOrderItemToRecoveryOrderItemDto")
     @Named("mapOrderItemListToRecoveryOrderItemDtoList")
-    List<RecoveryOrderItemDto> mapOrderItemListToRecoveryOrderItemDtoList(List<OrderItem> orderItem);
+    List<RecoveryOrderItemDto> mapOrderItemListToRecoveryOrderItemDtoList(List<OrderItem> orderItems);
 
     @Named("mapOrderItemToRecoveryOrderItemDto")
     RecoveryOrderItemDto mapOrderItemToRecoveryOrderItemDto(OrderItem orderItem);
