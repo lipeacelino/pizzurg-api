@@ -2,7 +2,7 @@ package com.pizzurg.api.controllers;
 
 import com.pizzurg.api.dto.input.user.CreateUserDto;
 import com.pizzurg.api.dto.input.user.LoginUserDto;
-import com.pizzurg.api.dto.output.auth.TokenJwtDto;
+import com.pizzurg.api.dto.output.auth.RecoveryJwtTokenDto;
 import com.pizzurg.api.dto.output.user.RecoveryUserDto;
 import com.pizzurg.api.enums.RoleName;
 import com.pizzurg.api.services.UserService;
@@ -25,8 +25,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenJwtDto> authenticateUser(@Valid @RequestBody LoginUserDto loginUserDto) {
-        TokenJwtDto token = userService.authenticateUser(loginUserDto);
+    public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(@Valid @RequestBody LoginUserDto loginUserDto) {
+        RecoveryJwtTokenDto token = userService.authenticateUser(loginUserDto);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
     @PostMapping("/customers")

@@ -1,6 +1,6 @@
 package com.pizzurg.api.services;
 
-import com.pizzurg.api.dto.input.order.ChangeStatusOrderDto;
+import com.pizzurg.api.dto.input.order.UpdateStatusOrderDto;
 import com.pizzurg.api.dto.input.order.CreateOrderDto;
 import com.pizzurg.api.dto.input.order.CreateOrderItemDto;
 import com.pizzurg.api.dto.output.order.RecoveryOrderDto;
@@ -8,7 +8,7 @@ import com.pizzurg.api.entities.*;
 import com.pizzurg.api.enums.PaymentMethod;
 import com.pizzurg.api.enums.RoleName;
 import com.pizzurg.api.enums.Status;
-import com.pizzurg.api.exception.OrderNotFoundByUserException;
+import com.pizzurg.api.exception.OrderNotFoundForUserException;
 import com.pizzurg.api.exception.OrderNotFoundException;
 import com.pizzurg.api.exception.ProductVariationNotFoundException;
 import com.pizzurg.api.exception.UserNotFoundException;
@@ -16,7 +16,7 @@ import com.pizzurg.api.mappers.OrderMapper;
 import com.pizzurg.api.repositories.OrderRepository;
 import com.pizzurg.api.repositories.ProductVariationRepository;
 import com.pizzurg.api.repositories.UserRepository;
-import com.pizzurg.api.security.TokenJwtService;
+import com.pizzurg.api.security.authentication.JwtTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +30,7 @@ import java.util.List;
 public class OrderService {
 
     @Autowired
-    private TokenJwtService tokenJwtService;
+    private JwtTokenService jwtTokenService;
 
     @Autowired
     private ProductVariationRepository productVariationRepository;
@@ -107,7 +107,7 @@ public class OrderService {
         if (user.getRoleList().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
             return orderMapper.mapOrderToRecoveryOrderDto(orderRepository
                     .findByUserIdAndOrderId(orderId, user.getId())
-                    .orElseThrow(OrderNotFoundByUserException::new));
+                    .orElseThrow(OrderNotFoundForUserException::new));
         }
         return orderMapper.mapOrderToRecoveryOrderDto(orderRepository.findById(orderId)
                 .orElseThrow(OrderNotFoundException::new));
@@ -138,13 +138,13 @@ public class OrderService {
     }
 
     private User getUser(String token) {
-        String subject = tokenJwtService.getSubjectFromToken(token.replace("Bearer ", ""));
+        String subject = jwtTokenService.getSubjectFromToken(token.replace("Bearer ", ""));
         return userRepository.findByEmail(subject).orElseThrow(UserNotFoundException::new);
     }
 
-    public RecoveryOrderDto changeOrderStatus(Long orderId, ChangeStatusOrderDto changeStatusOrderDto) {
-        Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundByUserException::new);
-        order.setStatus(Status.valueOf(changeStatusOrderDto.status().toUpperCase()));
+    public RecoveryOrderDto changeOrderStatus(Long orderId, UpdateStatusOrderDto updateStatusOrderDto) {
+        Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundForUserException::new);
+        order.setStatus(Status.valueOf(updateStatusOrderDto.status().toUpperCase()));
         return orderMapper.mapOrderToRecoveryOrderDto(orderRepository.save(order));
     }
 

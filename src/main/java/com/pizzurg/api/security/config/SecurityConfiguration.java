@@ -1,5 +1,6 @@
-package com.pizzurg.api.security;
+package com.pizzurg.api.security.config;
 
+import com.pizzurg.api.security.authentication.UserAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
     @Autowired
-    private AuthorizationFilter authorizationFilter;
+    private UserAuthenticationFilter userAuthenticationFilter;
 
     private static final String ROLE_ADMINISTRATOR = "ADMINISTRATOR";
 
@@ -83,7 +84,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PATCH, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_PATCH_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
                 .requestMatchers(HttpMethod.DELETE, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_DELETE_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
                 .anyRequest().denyAll()
-                .and().addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                .and().addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

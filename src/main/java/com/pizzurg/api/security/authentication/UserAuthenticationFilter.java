@@ -1,4 +1,4 @@
-package com.pizzurg.api.security;
+package com.pizzurg.api.security.authentication;
 
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -8,6 +8,8 @@ import com.pizzurg.api.entities.User;
 import com.pizzurg.api.exception.MissingTokenException;
 import com.pizzurg.api.exception.model.ApiError;
 import com.pizzurg.api.repositories.UserRepository;
+import com.pizzurg.api.security.config.SecurityConfiguration;
+import com.pizzurg.api.security.userdetails.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,10 +28,10 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class AuthorizationFilter extends OncePerRequestFilter {
+public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    private TokenJwtService tokenJwtService;
+    private JwtTokenService jwtTokenService;
 
     @Autowired
     private UserRepository userRepository;
@@ -40,7 +42,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             if (checkIfEndpointIsNotPublic(request)) {
                 String token = recoveryToken(request);
                 if (token != null) {
-                    String subject = tokenJwtService.getSubjectFromToken(token);
+                    String subject = jwtTokenService.getSubjectFromToken(token);
                     User user = userRepository.findByEmail(subject).get();
                     UserDetailsImpl userDetails = new UserDetailsImpl(user);
                     Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails.getUser().getEmail(), null, userDetails.getAuthorities());

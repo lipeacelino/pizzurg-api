@@ -1,6 +1,6 @@
 package com.pizzurg.api.controllers;
 
-import com.pizzurg.api.dto.input.order.ChangeStatusOrderDto;
+import com.pizzurg.api.dto.input.order.UpdateStatusOrderDto;
 import com.pizzurg.api.dto.input.order.CreateOrderDto;
 import com.pizzurg.api.dto.output.order.RecoveryOrderDto;
 import com.pizzurg.api.services.OrderService;
@@ -48,8 +48,8 @@ public class OrderController {
 
     @PatchMapping("/{orderId}/status")
     public ResponseEntity<RecoveryOrderDto> changeOrderStatus(@PathVariable Long orderId,
-                                                              @RequestBody ChangeStatusOrderDto changeStatusOrderDto) {
-        return new ResponseEntity<>(orderService.changeOrderStatus(orderId, changeStatusOrderDto), HttpStatus.OK);
+                                                              @RequestBody UpdateStatusOrderDto updateStatusOrderDto) {
+        return new ResponseEntity<>(orderService.changeOrderStatus(orderId, updateStatusOrderDto), HttpStatus.OK);
     }
 
     @GetMapping
