@@ -18,5 +18,6 @@ public record CreateProductVariationDto(
 
         @NotNull(message = "{not.null.message}")
         Boolean available
+
 ) {
 }

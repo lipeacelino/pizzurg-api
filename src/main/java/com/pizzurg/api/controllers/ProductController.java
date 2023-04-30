@@ -22,13 +22,13 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    public ResponseEntity<RecoveryProductDto> createProduct(@RequestBody @Valid CreateProductDto productDto) {
+    public ResponseEntity<RecoveryProductDto> createProduct(@Valid @RequestBody CreateProductDto productDto) {
         return new ResponseEntity<>(productService.createProduct(productDto), HttpStatus.CREATED);
     }
 
     @PostMapping({"/{productId}/variation"})
     public ResponseEntity<RecoveryProductDto> createProductVariation(@PathVariable Long productId,
-                                                                              @RequestBody @Valid CreateProductVariationDto createProductVariationDto) {
+                                                                     @Valid @RequestBody CreateProductVariationDto createProductVariationDto) {
         return new ResponseEntity<>(productService.createProductVariation(productId, createProductVariationDto), HttpStatus.OK);
     }
 

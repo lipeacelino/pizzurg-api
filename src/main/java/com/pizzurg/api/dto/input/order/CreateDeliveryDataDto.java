@@ -27,5 +27,6 @@ public record CreateDeliveryDataDto(
 
         @NotBlank(message = "{not.blank.message}")
         String state
+
 ) {
 }

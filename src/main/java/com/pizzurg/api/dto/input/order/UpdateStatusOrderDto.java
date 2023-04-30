@@ -6,5 +6,6 @@ public record UpdateStatusOrderDto(
 
         @NotBlank(message = "{not.blank.message}")
         String status
+
 ) {
 }

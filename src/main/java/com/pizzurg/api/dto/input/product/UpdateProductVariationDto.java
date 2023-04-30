@@ -10,5 +10,7 @@ public record UpdateProductVariationDto(
 
         BigDecimal price,
 
-        Boolean available) {
+        Boolean available
+
+) {
 }

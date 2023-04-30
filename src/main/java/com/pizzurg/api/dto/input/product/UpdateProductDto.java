@@ -6,5 +6,7 @@ public record UpdateProductDto(
 
         String description,
 
-        Boolean available) {
+        Boolean available
+
+) {
 }

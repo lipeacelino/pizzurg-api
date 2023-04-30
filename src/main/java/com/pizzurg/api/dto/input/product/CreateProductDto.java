@@ -1,5 +1,6 @@
 package com.pizzurg.api.dto.input.product;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -18,9 +19,10 @@ public record CreateProductDto(
         String category,
 
         @NotEmpty(message = "{not.empty.message}")
-        List<CreateProductVariationDto> productVariations,
+        List<@Valid CreateProductVariationDto> productVariations,
 
         @NotNull(message = "{not.null.message}")
         Boolean available
+
 ) {
 }

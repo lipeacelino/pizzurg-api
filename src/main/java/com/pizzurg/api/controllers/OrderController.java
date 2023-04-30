@@ -4,6 +4,7 @@ import com.pizzurg.api.dto.input.order.UpdateStatusOrderDto;
 import com.pizzurg.api.dto.input.order.CreateOrderDto;
 import com.pizzurg.api.dto.output.order.RecoveryOrderDto;
 import com.pizzurg.api.services.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<RecoveryOrderDto> createOrder(@RequestHeader("Authorization") String token,
-                                                        @RequestBody CreateOrderDto createOrderDto) {
+                                                        @RequestBody @Valid CreateOrderDto createOrderDto) {
         return new ResponseEntity<>(orderService.createOrder(token, createOrderDto), HttpStatus.CREATED);
     }
 

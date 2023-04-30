@@ -12,5 +12,6 @@ public record CreateOrderItemDto(
 
         @NotNull(message = "{not.null.message}")
         Integer quantity
+
 ) {
 }
