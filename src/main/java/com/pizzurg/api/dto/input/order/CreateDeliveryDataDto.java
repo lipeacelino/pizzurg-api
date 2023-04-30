@@ -26,7 +26,10 @@ public record CreateDeliveryDataDto(
         String city,
 
         @NotBlank(message = "{not.blank.message}")
-        String state
+        String state,
+
+        @NotBlank(message = "{not.blank.message}")
+        String phone_number
 
 ) {
 }

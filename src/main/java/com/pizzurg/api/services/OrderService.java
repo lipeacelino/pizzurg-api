@@ -76,6 +76,7 @@ public class OrderService {
                 .zipCode(createOrderDto.deliveryData().zipCode())
                 .city(createOrderDto.deliveryData().city())
                 .state(createOrderDto.deliveryData().state())
+                .phoneNumber(createOrderDto.deliveryData().phone_number())
                 .build();
 
         //obtém usuário através do token
@@ -154,4 +155,5 @@ public class OrderService {
         }
         orderRepository.deleteById(orderId);
     }
+
 }

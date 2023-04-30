@@ -81,13 +81,6 @@ public class UserService {
                 .orElseThrow(UserNotFoundException::new));
     }
 
-    private boolean checkIfEmailNotExists(String email) {
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new EmailAlreadyExistsException();
-        }
-        return true;
-    }
-
     public void deleteUserById(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException();
@@ -96,6 +89,13 @@ public class UserService {
             throw new UserAssociatedWithOrderException();
         }
         userRepository.deleteById(userId);
+    }
+
+    private boolean checkIfEmailNotExists(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new EmailAlreadyExistsException();
+        }
+        return true;
     }
 
     private Role getRole(RoleName roleName) {

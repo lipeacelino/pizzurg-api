@@ -1,5 +1,7 @@
 package com.pizzurg.api.dto.output.order;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record RecoveryDeliveryData(
 
         Long id,
@@ -18,6 +20,9 @@ public record RecoveryDeliveryData(
 
         String city,
 
-        String state
+        String state,
+
+        String phoneNumber
+
 ) {
 }

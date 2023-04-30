@@ -39,4 +39,7 @@ public class DeliveryData {
 
     private String state;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
 }
