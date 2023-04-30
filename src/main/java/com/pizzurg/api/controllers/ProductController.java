@@ -33,16 +33,16 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<RecoveryProductDto>> recoveryProducts(
+    public ResponseEntity<Page<RecoveryProductDto>> getProducts(
             @PageableDefault(size = 8)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "name", direction = Sort.Direction.ASC), //Critério de ordenação
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
             Pageable pageable) {
-        return new ResponseEntity<>(productService.recoveryProducts(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(productService.getProducts(pageable), HttpStatus.OK);
     }
     @GetMapping("/category/{categoryName}")
-    public ResponseEntity<Page<RecoveryProductDto>> recoveryProductsByCategory(
+    public ResponseEntity<Page<RecoveryProductDto>> getProductsByCategory(
             @PageableDefault(size = 8)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "name", direction = Sort.Direction.ASC), //Critério de ordenação
@@ -50,23 +50,23 @@ public class ProductController {
             Pageable pageable,
             @PathVariable String categoryName
     ) {
-        return new ResponseEntity<>(productService.recoveryProductsByCategory(categoryName, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(productService.getProductsByCategory(categoryName, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<RecoveryProductDto>> recoveryProductsByName(
+    public ResponseEntity<Page<RecoveryProductDto>> getProductsByName(
             @PageableDefault(size = 8)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "name", direction = Sort.Direction.ASC), //Critério de ordenação
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
             Pageable pageable,
             @RequestParam("name") String productName) {
-        return new ResponseEntity<>(productService.recoveryProductsByName(productName, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(productService.getProductsByName(productName, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{productId}") //ver se dá pra validar a path variable
-    public ResponseEntity<RecoveryProductDto> findProductById(@PathVariable Long productId) {
-        return new ResponseEntity<>(productService.findProductById(productId), HttpStatus.OK);
+    public ResponseEntity<RecoveryProductDto> getProductById(@PathVariable Long productId) {
+        return new ResponseEntity<>(productService.getProductById(productId), HttpStatus.OK);
     }
 
     @PatchMapping("/{productId}") //ver se dá pra validar a path variable
@@ -81,14 +81,14 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}") //ver se dá pra validar a path variable
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
-        productService.deleteProduct(productId);
+    public ResponseEntity<Void> deleteProductById(@PathVariable Long productId) {
+        productService.deleteProductId(productId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{productId}/variation/{productVariationId}") //ver se dá pra validar a path variable
-    public ResponseEntity<Void> deleteProductVariation(@PathVariable Long productId, @PathVariable Long productVariationId) {
-        productService.deleteProductVariation(productId, productVariationId);
+    public ResponseEntity<Void> deleteProductVariationById(@PathVariable Long productId, @PathVariable Long productVariationId) {
+        productService.deleteProductVariationById(productId, productVariationId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -65,18 +65,18 @@ public class UserService {
             User newUser = User.builder()
                     .email(createUserDto.email())
                     .password(securityConfiguration.passwordEncoder().encode(createUserDto.password()))
-                    .roleList(List.of(getRole(roleName)))
+                    .roles(List.of(getRole(roleName)))
                     .build();
             userRepository.save(newUser);
         }
     }
 
-    public Page<RecoveryUserDto> recoveryUsers(Pageable pageable) {
+    public Page<RecoveryUserDto> getUsers(Pageable pageable) {
         Page<User> userPage = userRepository.findAll(pageable);
         return userPage.map(user -> userMapper.mapUserToUserDto(user));
     }
 
-    public RecoveryUserDto recoveryUserById(Long userId) {
+    public RecoveryUserDto getUserById(Long userId) {
         return userMapper.mapUserToUserDto(userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new));
     }
@@ -88,7 +88,7 @@ public class UserService {
         return true;
     }
 
-    public void deleteUser(Long userId) {
+    public void deleteUserById(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException();
         }
@@ -99,7 +99,7 @@ public class UserService {
     }
 
     private Role getRole(RoleName roleName) {
-        Optional<Role> roleOptional = roleRepository.findByName(roleName);
+        Optional<Role> roleOptional= roleRepository.findByName(roleName);
         if (roleOptional.isPresent()) {
             return roleOptional.get();
         }

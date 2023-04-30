@@ -27,7 +27,7 @@ public class Product {
     private Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductVariation> productVariationList;
+    private List<ProductVariation> productVariations;
 
     private Boolean available;
 

@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("select o from Order o where o.id = :orderId and o.user.id = :userId")
-    Optional<Order> findByUserIdAndOrderId(@Param("orderId") Long orderId, @Param("userId") Long userId);
+    Optional<Order> findByOrderIdAndUserId(@Param("orderId") Long orderId, @Param("userId") Long userId);
 
     @Query("select o from Order o where o.user.id = :userId")
     Page<Order> findAllByUserId(@Param("userId") Long userId, Pageable pageable);

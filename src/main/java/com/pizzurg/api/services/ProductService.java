@@ -5,10 +5,9 @@ import com.pizzurg.api.dto.output.product.RecoveryProductDto;
 import com.pizzurg.api.entities.Product;
 import com.pizzurg.api.entities.ProductVariation;
 import com.pizzurg.api.enums.Category;
-import com.pizzurg.api.exception.ProductNotFoundException;
-import com.pizzurg.api.exception.ProductVariationNotFoundException;
-import com.pizzurg.api.exception.ProductVariationUnavailableException;
+import com.pizzurg.api.exception.*;
 import com.pizzurg.api.mappers.ProductMapper;
+import com.pizzurg.api.repositories.OrderItemRepository;
 import com.pizzurg.api.repositories.ProductRepository;
 import com.pizzurg.api.repositories.ProductVariationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.text.Normalizer;
 import java.util.List;
 
 @Service
@@ -29,28 +27,31 @@ public class ProductService {
     private ProductVariationRepository productVariationRepository;
 
     @Autowired
+    private OrderItemRepository orderItemRepository;
+
+    @Autowired
     private ProductMapper productMapper;
 
     public RecoveryProductDto createProduct(CreateProductDto productDto) {
-        List<ProductVariation> productVariationList =  productDto.productVariations().stream()
+        List<ProductVariation> productVariations =  productDto.productVariations().stream()
                 .map(productVariationDto -> productMapper.mapCreateProductVariationDtoToProductVariation(productVariationDto))
                 .toList();
         Product product = Product.builder()
                 .name(productDto.name())
                 .description(productDto.description())
                 .category(Category.valueOf(productDto.category().toUpperCase()))
-                .productVariationList(productVariationList)
+                .productVariations(productVariations)
                 .available(productDto.available())
                 .build();
 
         /*se o product estiver com o available = false, por padrão todos os productVariation devem estar com available false também,
         porque não faria sentido o produto estar estar indisponível e os tamanhos daquele produto estarem disponíveis*/
-        if (!product.getAvailable() && product.getProductVariationList().stream().anyMatch(ProductVariation::getAvailable)) {
+        if (!product.getAvailable() && product.getProductVariations().stream().anyMatch(ProductVariation::getAvailable)) {
                 throw new ProductVariationUnavailableException();
         }
 
         //relaciona cada productVariation com o product
-        productVariationList.forEach(productVariation -> productVariation.setProduct(product));
+        productVariations.forEach(productVariation -> productVariation.setProduct(product));
         Product productSaved = productRepository.save(product);
         return productMapper.mapProductToRecoveryProductDto(productSaved);
     }
@@ -62,28 +63,28 @@ public class ProductService {
         productVariation.setProduct(product);
         ProductVariation productVariationSaved = productVariationRepository.save(productVariation);
 
-        product.getProductVariationList().add(productVariationSaved);
+        product.getProductVariations().add(productVariationSaved);
         productRepository.save(product);
 
         return productMapper.mapProductToRecoveryProductDto(productVariationSaved.getProduct());
     }
 
-    public Page<RecoveryProductDto> recoveryProducts(Pageable pageable) {
+    public Page<RecoveryProductDto> getProducts(Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(pageable);
         return productPage.map(product -> productMapper.mapProductToRecoveryProductDto(product));
     }
 
-    public Page<RecoveryProductDto> recoveryProductsByCategory(String categoryName, Pageable pageable) {
+    public Page<RecoveryProductDto> getProductsByCategory(String categoryName, Pageable pageable) {
         Page<Product> productPage = productRepository.findByCategory(Category.valueOf(categoryName.toUpperCase()), pageable);
         return productPage.map(product -> productMapper.mapProductToRecoveryProductDto(product));
     }
 
-    public Page<RecoveryProductDto> recoveryProductsByName(String productName, Pageable pageable) {
+    public Page<RecoveryProductDto> getProductsByName(String productName, Pageable pageable) {
         Page<Product> productPage = productRepository.findByNameContaining(productName, pageable);
         return productPage.map(product -> productMapper.mapProductToRecoveryProductDto(product));
     }
 
-    public RecoveryProductDto findProductById(Long productId) {
+    public RecoveryProductDto getProductById(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
         return productMapper.mapProductToRecoveryProductDto(product);
     }
@@ -103,7 +104,7 @@ public class ProductService {
             /*se o product estiver com o available = false, todos os productVariation devem ser setados com available false também,
             porque não faria sentido o produto estar estar indisponível e os tamanhos daquele produto estarem disponíveis*/
             if (!product.getAvailable()) {
-                product.getProductVariationList().forEach(productVariation -> productVariation.setAvailable(false));
+                product.getProductVariations().forEach(productVariation -> productVariation.setAvailable(false));
             }
         }
 
@@ -113,7 +114,7 @@ public class ProductService {
     public RecoveryProductDto updateProductVariation(Long productId, Long productVariationId, UpdateProductVariationDto updateProductVariationDto) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
 
-        ProductVariation productVariation = product.getProductVariationList().stream()
+        ProductVariation productVariation = product.getProductVariations().stream()
                 .filter(productVariationInList -> productVariationInList.getId().equals(productVariationId))
                 .findFirst()
                 .orElseThrow(ProductVariationNotFoundException::new);
@@ -138,19 +139,25 @@ public class ProductService {
         return productMapper.mapProductToRecoveryProductDto(productSaved);
     }
 
-    public void deleteProduct(Long productId) {
+    public void deleteProductId(Long productId) {
         if (!productRepository.existsById(productId)) {
             throw new ProductNotFoundException();
+        }
+        if (orderItemRepository.findFirstByProductId(productId).isPresent()) {
+            throw new ProductAssociatedWithOrderException();
         }
         productRepository.deleteById(productId);
     }
 
-    public void deleteProductVariation(Long productId, Long productVariationId) {
+    public void deleteProductVariationById(Long productId, Long productVariationId) {
         if (!productRepository.existsById(productId)) {
             throw new ProductNotFoundException();
         }
         if (!productVariationRepository.existsById(productVariationId)) {
             throw new ProductVariationNotFoundException();
+        }
+        if (orderItemRepository.findFirstByProductVariationId(productVariationId).isPresent()) {
+            throw new ProductVariationAssociatedWithOrderException();
         }
         productVariationRepository.deleteById(productVariationId);
     }

@@ -45,7 +45,7 @@ public class OrderService {
     private OrderMapper orderMapper;
 
     public RecoveryOrderDto createOrder(String token, CreateOrderDto createOrderDto) {
-        List<OrderItem> orderItemList = new ArrayList<>();
+        List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal amount = BigDecimal.ZERO;
 
         for(CreateOrderItemDto createOrderItemDto : createOrderDto.orderItems()) {
@@ -63,7 +63,7 @@ public class OrderService {
                     .productVariation(productVariation)
                     .build();
 
-            orderItemList.add(orderItem);
+            orderItems.add(orderItem);
         }
 
         //monta o delivery data
@@ -86,13 +86,13 @@ public class OrderService {
                 .user(user)
                 //Category.valueOf(categoryNormalized.toUpperCase())
                 .paymentMethod(PaymentMethod.valueOf(createOrderDto.paymentMethod().toUpperCase()))
-                .orderItemList(orderItemList)
+                .orderItems(orderItems)
                 .amount(amount)
                 .deliveryData(deliveryData)
                 .build();
 
         //associa cada item à ordem
-        orderItemList.forEach(orderItem -> orderItem.setOrder(order));
+        orderItems.forEach(orderItem -> orderItem.setOrder(order));
 
         //associa ordem aos dados de entrega
         deliveryData.setOrder(order);
@@ -100,24 +100,24 @@ public class OrderService {
         return orderMapper.mapOrderToRecoveryOrderDto(orderRepository.save(order));
     }
 
-    public RecoveryOrderDto getOrder(String token, Long orderId) {
+    public RecoveryOrderDto getOrderById(String token, Long orderId) {
         User user = getUser(token);
 
         //se tiver role de admin deve mostrar qualquer pedido, se não, mostrar o pedido apenas se ele pertencer ao usuário atual
-        if (user.getRoleList().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
+        if (user.getRoles().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
             return orderMapper.mapOrderToRecoveryOrderDto(orderRepository
-                    .findByUserIdAndOrderId(orderId, user.getId())
+                    .findByOrderIdAndUserId(orderId, user.getId())
                     .orElseThrow(OrderNotFoundForUserException::new));
         }
         return orderMapper.mapOrderToRecoveryOrderDto(orderRepository.findById(orderId)
                 .orElseThrow(OrderNotFoundException::new));
     }
 
-    public Page<RecoveryOrderDto> getAllOrders(String token, Pageable pageable) {
+    public Page<RecoveryOrderDto> getOrders(String token, Pageable pageable) {
         User user = getUser(token);
 
         //se tiver role de customer deve mostrar apenas os pedidos que pertencem ao usuário atual. Se não, deve mostrar tudo.
-        if (user.getRoleList().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
+        if (user.getRoles().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
             Page<Order> orderPage = orderRepository.findAllByUserId(user.getId(), pageable);
             return orderPage.map(order -> orderMapper.mapOrderToRecoveryOrderDto(order));
         }
@@ -129,7 +129,7 @@ public class OrderService {
         User user = getUser(token);
 
         //se tiver role de customer deve mostrar apenas os pedidos que pertencem ao usuário atual. Se não, deve mostrar tudo.
-        if (user.getRoleList().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
+        if (user.getRoles().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
             Page<Order> orderPage = orderRepository.findOrderByStatusAndUser(Status.valueOf(statusName.toUpperCase()), user.getId(), pageable);
             return orderPage.map(order -> orderMapper.mapOrderToRecoveryOrderDto(order));
         }

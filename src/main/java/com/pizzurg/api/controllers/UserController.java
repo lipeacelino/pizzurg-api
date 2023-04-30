@@ -36,22 +36,22 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<RecoveryUserDto>> recoveryUsers(
+    public ResponseEntity<Page<RecoveryUserDto>> getUsers(
             @PageableDefault(size = 8)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)}) //Critério de desempate
             Pageable pageable) {
-        return new ResponseEntity<>(userService.recoveryUsers(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUsers(pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<RecoveryUserDto> recoveryUserById(@PathVariable Long userId) {
-        return new ResponseEntity<>(userService.recoveryUserById(userId), HttpStatus.OK);
+    public ResponseEntity<RecoveryUserDto> getUserById(@PathVariable Long userId) {
+        return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
-        userService.deleteUser(userId);
+    public ResponseEntity<Void> deleteUserById(@PathVariable Long userId) {
+        userService.deleteUserById(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

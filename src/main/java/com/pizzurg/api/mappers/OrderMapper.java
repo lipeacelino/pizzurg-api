@@ -6,7 +6,6 @@ import com.pizzurg.api.dto.output.order.RecoveryOrderItemDto;
 import com.pizzurg.api.entities.DeliveryData;
 import com.pizzurg.api.entities.Order;
 import com.pizzurg.api.entities.OrderItem;
-import com.pizzurg.api.enums.PaymentMethod;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,7 +18,7 @@ public interface OrderMapper {
 
 
     @Mapping(qualifiedByName = "mapDeliveryDataToRecoveryDeliveryData", target = "deliveryData")
-    @Mapping(qualifiedByName = "mapOrderItemListToRecoveryOrderItemDtoList", source = "orderItemList", target = "orderItems")
+    @Mapping(qualifiedByName = "mapOrderItemListToRecoveryOrderItemDtoList", source = "getOrderItems", target = "orderItems")
     @Mapping(qualifiedByName = "mapUserToUserDto", target = "user")
     @Named("mapOrderToRecoveryOrderDto")
     RecoveryOrderDto mapOrderToRecoveryOrderDto(Order order);

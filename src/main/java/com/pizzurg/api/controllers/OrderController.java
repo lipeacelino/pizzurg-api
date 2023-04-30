@@ -29,9 +29,9 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<RecoveryOrderDto> getOrder(@RequestHeader("Authorization") String token,
-                                                     @PathVariable Long orderId) {
-        return new ResponseEntity<>(orderService.getOrder(token, orderId), HttpStatus.OK);
+    public ResponseEntity<RecoveryOrderDto> getOrderById(@RequestHeader("Authorization") String token,
+                                                         @PathVariable Long orderId) {
+        return new ResponseEntity<>(orderService.getOrderById(token, orderId), HttpStatus.OK);
     }
 
     @GetMapping("/status/{statusName}")
@@ -54,7 +54,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<RecoveryOrderDto>> getAllOrders(
+    public ResponseEntity<Page<RecoveryOrderDto>> getOrders(
             @PageableDefault(size = 8)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "createdDate", direction = Sort.Direction.DESC), //Critério de ordenação
@@ -62,7 +62,7 @@ public class OrderController {
             Pageable pageable,
             @RequestHeader("Authorization") String token
     ) {
-        return new ResponseEntity<>(orderService.getAllOrders(token, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.getOrders(token, pageable), HttpStatus.OK);
     }
 
     @DeleteMapping("/{orderId}")

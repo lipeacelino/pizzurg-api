@@ -14,13 +14,13 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    @Mapping(qualifiedByName = "mapRoleListToRoleDtoList", source = "roleList", target = "roles")
+    @Mapping(qualifiedByName = "mapRoleListToRoleDtoList", target = "roles")
     @Named("mapUserToUserDto")
     RecoveryUserDto mapUserToUserDto(User user);
 
     @Named("mapRoleListToRoleDtoList")
     @IterableMapping(qualifiedByName = "mapRoleToRoleDto")
-    List<RecoveryRoleDto> mapRoleListToRoleDtoList(List<Role> role);
+    List<RecoveryRoleDto> mapRoleListToRoleDtoList(List<Role> roles);
 
     @Named("mapRoleToRoleDto")
     RecoveryRoleDto mapRoleToRoleDto(Role role);

@@ -27,7 +27,7 @@ public class Order {
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> orderItemList;
+    private List<OrderItem> orderItems;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default

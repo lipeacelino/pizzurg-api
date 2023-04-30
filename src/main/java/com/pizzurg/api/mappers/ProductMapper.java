@@ -5,7 +5,6 @@ import com.pizzurg.api.dto.output.product.RecoveryProductDto;
 import com.pizzurg.api.dto.output.product.RecoveryProductVariationDto;
 import com.pizzurg.api.entities.Product;
 import com.pizzurg.api.entities.ProductVariation;
-import com.pizzurg.api.enums.Category;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,7 +15,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-    @Mapping(source = "productVariationList", target = "productVariations", qualifiedByName = "mapProductVariationToRecoveryProductVariationDto")
+    @Mapping(source = "getProductVariations", target = "productVariations", qualifiedByName = "mapProductVariationToRecoveryProductVariationDto")
     RecoveryProductDto mapProductToRecoveryProductDto(Product product);
 
     @Named("mapProductVariationToRecoveryProductVariationDto")
