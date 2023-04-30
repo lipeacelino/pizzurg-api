@@ -1,6 +1,6 @@
 package com.pizzurg.api.entities;
 
-import com.pizzurg.api.enums.MethodPayment;
+import com.pizzurg.api.enums.PaymentMethod;
 import com.pizzurg.api.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,8 +34,8 @@ public class Order {
     private Status status = Status.PENDING;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "method_payment")
-    private MethodPayment methodPayment;
+    @Column(name = "payment_method")
+    private PaymentMethod paymentMethod;
 
     private BigDecimal amount;
 

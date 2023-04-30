@@ -2,7 +2,7 @@ package com.pizzurg.api.dto.output.order;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pizzurg.api.dto.output.user.RecoveryUserDto;
-import com.pizzurg.api.enums.MethodPayment;
+import com.pizzurg.api.enums.PaymentMethod;
 import com.pizzurg.api.enums.Status;
 
 import java.math.BigDecimal;
@@ -19,7 +19,7 @@ public record RecoveryOrderDto(
 
         Status status,
 
-        MethodPayment methodPayment,
+        String paymentMethod,
 
         BigDecimal amount,
 

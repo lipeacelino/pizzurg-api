@@ -17,7 +17,6 @@ import java.util.List;
 public interface ProductMapper {
 
     @Mapping(source = "productVariationList", target = "productVariations", qualifiedByName = "mapProductVariationToRecoveryProductVariationDto")
-    @Mapping(source = "category", target = "category", qualifiedByName = "categoryEnumToString")
     RecoveryProductDto mapProductToRecoveryProductDto(Product product);
 
     @Named("mapProductVariationToRecoveryProductVariationDto")
@@ -28,10 +27,5 @@ public interface ProductMapper {
     RecoveryProductVariationDto mapProductVariationToRecoveryProductVariationDto(ProductVariation productVariation);
 
     ProductVariation mapCreateProductVariationDtoToProductVariation(CreateProductVariationDto createProductVariationDto);
-
-    @Named("categoryEnumToString")
-    default String categoryEnumToString(Category category) {
-        return category.getName();
-    }
 
 }

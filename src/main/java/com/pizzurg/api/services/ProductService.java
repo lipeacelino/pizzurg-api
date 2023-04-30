@@ -38,7 +38,7 @@ public class ProductService {
         Product product = Product.builder()
                 .name(productDto.name())
                 .description(productDto.description())
-                .category(removeAccentsAndReturnTypeCategoryEnum(productDto.category()))
+                .category(Category.valueOf(productDto.category().toUpperCase()))
                 .productVariationList(productVariationList)
                 .available(productDto.available())
                 .build();
@@ -74,7 +74,7 @@ public class ProductService {
     }
 
     public Page<RecoveryProductDto> recoveryProductsByCategory(String categoryName, Pageable pageable) {
-        Page<Product> productPage = productRepository.findByCategory(removeAccentsAndReturnTypeCategoryEnum(categoryName), pageable);
+        Page<Product> productPage = productRepository.findByCategory(Category.valueOf(categoryName.toUpperCase()), pageable);
         return productPage.map(product -> productMapper.mapProductToRecoveryProductDto(product));
     }
 
@@ -153,12 +153,6 @@ public class ProductService {
             throw new ProductVariationNotFoundException();
         }
         productVariationRepository.deleteById(productVariationId);
-    }
-
-    private Category removeAccentsAndReturnTypeCategoryEnum(String category) {
-        String categoryNormalized = Normalizer.normalize(category, Normalizer.Form.NFD)
-                .replaceAll("[^\\p{ASCII}]", "");
-        return Category.valueOf(categoryNormalized.toUpperCase());
     }
 
 }

@@ -12,7 +12,7 @@ public record CreateOrderDto(
         List<CreateOrderItemDto> orderItems,
 
         @NotBlank(message = "{not.blank.message}")
-        String methodPayment,
+        String paymentMethod,
 
         @NotNull(message = "{not.null.message}")
         CreateDeliveryDataDto deliveryData

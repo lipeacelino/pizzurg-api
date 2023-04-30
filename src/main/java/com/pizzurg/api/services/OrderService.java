@@ -5,7 +5,7 @@ import com.pizzurg.api.dto.input.order.CreateOrderDto;
 import com.pizzurg.api.dto.input.order.CreateOrderItemDto;
 import com.pizzurg.api.dto.output.order.RecoveryOrderDto;
 import com.pizzurg.api.entities.*;
-import com.pizzurg.api.enums.MethodPayment;
+import com.pizzurg.api.enums.PaymentMethod;
 import com.pizzurg.api.enums.RoleName;
 import com.pizzurg.api.enums.Status;
 import com.pizzurg.api.exception.OrderNotFoundByUserException;
@@ -84,7 +84,8 @@ public class OrderService {
         //monta o order com todos os itens das ordens
         Order order = Order.builder()
                 .user(user)
-                .methodPayment(MethodPayment.valueOf(createOrderDto.methodPayment().toUpperCase()))
+                //Category.valueOf(categoryNormalized.toUpperCase())
+                .paymentMethod(PaymentMethod.valueOf(createOrderDto.paymentMethod().toUpperCase()))
                 .orderItemList(orderItemList)
                 .amount(amount)
                 .deliveryData(deliveryData)
@@ -93,7 +94,7 @@ public class OrderService {
         //associa cada item à ordem
         orderItemList.forEach(orderItem -> orderItem.setOrder(order));
 
-        //associa a ordem aos dados de entrega
+        //associa ordem aos dados de entrega
         deliveryData.setOrder(order);
 
         return orderMapper.mapOrderToRecoveryOrderDto(orderRepository.save(order));

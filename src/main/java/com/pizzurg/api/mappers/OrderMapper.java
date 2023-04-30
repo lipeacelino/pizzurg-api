@@ -6,6 +6,7 @@ import com.pizzurg.api.dto.output.order.RecoveryOrderItemDto;
 import com.pizzurg.api.entities.DeliveryData;
 import com.pizzurg.api.entities.Order;
 import com.pizzurg.api.entities.OrderItem;
+import com.pizzurg.api.enums.PaymentMethod;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

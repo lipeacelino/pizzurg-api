@@ -1,6 +1,6 @@
 package com.pizzurg.api.enums;
 
-public enum MethodPayment {
+public enum PaymentMethod {
 
     MONEY,
     PIX,
