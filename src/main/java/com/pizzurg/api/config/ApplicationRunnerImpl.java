@@ -7,9 +7,9 @@ import com.pizzurg.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
 public class ApplicationRunnerImpl implements ApplicationRunner {
 
     @Autowired
