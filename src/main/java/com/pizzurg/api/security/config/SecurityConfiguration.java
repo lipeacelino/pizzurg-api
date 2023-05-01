@@ -30,51 +30,50 @@ public class SecurityConfiguration {
     };
 
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED_TO_GET_STATUS = {
-            "/products", //get
-            "/products/{productId}", //get
-            "/products/category/{categoryName}", //get
-            "/products/search", //get
-            "/orders", //get
-            "/orders/{orderId}", //get
-            "/orders/status/{statusName}" //get
+            "/products",
+            "/products/{productId}",
+            "/products/category/{categoryName}",
+            "/products/search",
+            "/orders",
+            "/orders/{orderId}",
+            "/orders/status/{statusName}"
     };
 
     private static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED_TO_POST_STATUS = {
-            "/orders" //post
+            "/orders"
     };
 
-    //endpois do administrador
     private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_GET_STATUS = {
             "/users",
             "/users/{userId}"
     };
 
     private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_POST_STATUS = {
-            "/products", //post
-            "/products/{productId}/variation" //post
+            "/products",
+            "/products/{productId}/variation"
     };
 
     private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_PUT_STATUS = {
-            "/{productId}/variation/{productVariationId}" //put
+            "/{productId}/variation/{productVariationId}"
     };
 
     private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_PATCH_STATUS = {
-            "/products/{productId}", //patch
-            "/orders/{orderId}/status" //patch
+            "/products/{productId}",
+            "/orders/{orderId}/status"
     };
 
     private static final String [] ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_DELETE_STATUS = {
-            "/users/{userId}",//delete
-            "/products/{productId}", //delete
-            "/products/{productId}/variation/{productVariationId}", //delete
+            "/users/{userId}",
+            "/products/{productId}",
+            "/products/{productId}/variation/{productVariationId}",
             "/orders/{productId}"
     };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeHttpRequests()
+        return httpSecurity.csrf().disable() // Desativa a proteção contra CSRF
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Configura a política de criação de sessão como stateless
+                .and().authorizeHttpRequests() // Habilita a autorização para as requisições HTTP
                 .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                 .requestMatchers(HttpMethod.GET, ENDPOINTS_WITH_AUTHENTICATION_REQUIRED_TO_GET_STATUS).authenticated()
                 .requestMatchers(HttpMethod.POST, ENDPOINTS_WITH_AUTHENTICATION_REQUIRED_TO_POST_STATUS).authenticated()
@@ -84,6 +83,8 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PATCH, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_PATCH_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
                 .requestMatchers(HttpMethod.DELETE, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_DELETE_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
                 .anyRequest().denyAll()
+
+                // Adiciona o filtro de autenticação de usuário que criamos antes do filtro de segurança padrão do Spring Security
                 .and().addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
