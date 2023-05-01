@@ -53,20 +53,34 @@ public class UserService {
     private UserMapper userMapper;
 
     public RecoveryJwtTokenDto authenticateUser(LoginUserDto loginUserDto) {
+        // Cria um objeto de autenticação com o email e a senha do usuário
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUserDto.email(), loginUserDto.password());
+
+        // Autentica o usuário com as credenciais fornecidas
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+
+        // Obtém o objeto UserDetails do usuário autenticado
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        // Gera um token JWT para o usuário autenticado
         return new RecoveryJwtTokenDto(jwtTokenService.generateToken(userDetails));
     }
 
     public void createUser(CreateUserDto createUserDto, RoleName roleName) {
+        // Verifica se o e-mail fornecido não existe no banco de dados
         if (checkIfEmailNotExists(createUserDto.email())) {
+
+            // Cria um novo usuário com os dados fornecidos
             User newUser = User.builder()
                     .email(createUserDto.email())
+                    // Codifica a senha do usuário com o algoritmo bcrypt
                     .password(securityConfiguration.passwordEncoder().encode(createUserDto.password()))
+                    // Atribui ao usuário uma permissão específica
                     .roles(List.of(getRole(roleName)))
                     .build();
+
+            // Salva o novo usuário no banco de dados
             userRepository.save(newUser);
         }
     }
@@ -85,6 +99,8 @@ public class UserService {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException();
         }
+
+        // Se um usuário estiver associado a um pedido, o usuário não pode ser excluído
         if(orderRepository.findFirstByUserId(userId).isPresent()) {
             throw new UserAssociatedWithOrderException();
         }

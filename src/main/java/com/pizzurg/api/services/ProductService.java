@@ -32,25 +32,33 @@ public class ProductService {
     @Autowired
     private ProductMapper productMapper;
 
-    public RecoveryProductDto createProduct(CreateProductDto productDto) {
-        List<ProductVariation> productVariations =  productDto.productVariations().stream()
+    public RecoveryProductDto createProduct(CreateProductDto createProductDto) {
+        /*
+        Converte a lista de ProductVariationDto em uma lista de ProductVariation,
+        utilizando o ProductMapper para fazer o mapeamento de cada elemento da lista.
+         */
+        List<ProductVariation> productVariations =  createProductDto.productVariations().stream()
                 .map(productVariationDto -> productMapper.mapCreateProductVariationDtoToProductVariation(productVariationDto))
                 .toList();
+
+        // Cria um produto através dos dados do DTO
         Product product = Product.builder()
-                .name(productDto.name())
-                .description(productDto.description())
-                .category(Category.valueOf(productDto.category().toUpperCase()))
+                .name(createProductDto.name())
+                .description(createProductDto.description())
+                .category(Category.valueOf(createProductDto.category().toUpperCase()))
                 .productVariations(productVariations)
-                .available(productDto.available())
+                .available(createProductDto.available())
                 .build();
 
-        /*se o product estiver com o available = false, por padrão todos os productVariation devem estar com available false também,
-        porque não faria sentido o produto estar estar indisponível e os tamanhos daquele produto estarem disponíveis*/
+        /*
+        Se o produto estiver com o available = false, por padrão todas as variações do produto devem estar com available false também,
+        porque não faria sentido o produto estar estar indisponível e as variações daquele produto estarem disponíveis
+         */
         if (!product.getAvailable() && product.getProductVariations().stream().anyMatch(ProductVariation::getAvailable)) {
                 throw new ProductVariationUnavailableException();
         }
 
-        //relaciona cada productVariation com o product
+        // Relaciona cada variação de produto com o produto
         productVariations.forEach(productVariation -> productVariation.setProduct(product));
         Product productSaved = productRepository.save(product);
         return productMapper.mapProductToRecoveryProductDto(productSaved);
@@ -59,10 +67,14 @@ public class ProductService {
     public RecoveryProductDto createProductVariation(Long productId, CreateProductVariationDto createProductVariationDto) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
 
+        // Converte o DTO de criação da variação de produto para uma entidade ProductVariation
         ProductVariation productVariation = productMapper.mapCreateProductVariationDtoToProductVariation(createProductVariationDto);
+
+        // Associa a variação de produto ao produto e salva a variação no banco de dados
         productVariation.setProduct(product);
         ProductVariation productVariationSaved = productVariationRepository.save(productVariation);
 
+        // Adiciona a variação de produto ao produto e salva o produto no banco de dados
         product.getProductVariations().add(productVariationSaved);
         productRepository.save(product);
 
@@ -101,8 +113,10 @@ public class ProductService {
         if (updateProductDto.available() != null) {
             product.setAvailable(updateProductDto.available());
 
-            /*se o product estiver com o available = false, todos os productVariation devem ser setados com available false também,
-            porque não faria sentido o produto estar estar indisponível e os tamanhos daquele produto estarem disponíveis*/
+            /*
+            Se o produto estiver com o available = false, por padrão todas as variações do produto devem estar com available = false também,
+            porque não faria sentido o produto estar estar indisponível e as variações daquele produto estarem disponíveis
+             */
             if (!product.getAvailable()) {
                 product.getProductVariations().forEach(productVariation -> productVariation.setAvailable(false));
             }
@@ -114,8 +128,12 @@ public class ProductService {
     public RecoveryProductDto updateProductVariation(Long productId, Long productVariationId, UpdateProductVariationDto updateProductVariationDto) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
 
+        /*
+         Procura pela variação de produto (através do id) na lista de variações do produto
+         que já está salvo no banco
+         */
         ProductVariation productVariation = product.getProductVariations().stream()
-                .filter(productVariationInList -> productVariationInList.getId().equals(productVariationId))
+                .filter(productVariationInProduct -> productVariationInProduct.getId().equals(productVariationId))
                 .findFirst()
                 .orElseThrow(ProductVariationNotFoundException::new);
 
@@ -126,6 +144,10 @@ public class ProductService {
             productVariation.setDescription(updateProductVariationDto.description());
         }
         if (updateProductVariationDto.available() != null) {
+            /*
+            Se o produto estiver com o available = false, por padrão a nova variação adicionada deve estar com available = false também,
+            porque não faria sentido o produto estar estar indisponível e a variação daquele produto estar disponível
+             */
             if (updateProductVariationDto.available() && !productVariation.getProduct().getAvailable()) {
                 throw new ProductVariationUnavailableException();
             }
@@ -143,6 +165,7 @@ public class ProductService {
         if (!productRepository.existsById(productId)) {
             throw new ProductNotFoundException();
         }
+        // Se o produto estiver associado a um pedido, o produto não pode ser excluído
         if (orderItemRepository.findFirstByProductId(productId).isPresent()) {
             throw new ProductAssociatedWithOrderException();
         }
@@ -156,6 +179,7 @@ public class ProductService {
         if (!productVariationRepository.existsById(productVariationId)) {
             throw new ProductVariationNotFoundException();
         }
+        // Se uma variação do produto estiver associada a um pedido, a variação não pode ser excluída
         if (orderItemRepository.findFirstByProductVariationId(productVariationId).isPresent()) {
             throw new ProductVariationAssociatedWithOrderException();
         }

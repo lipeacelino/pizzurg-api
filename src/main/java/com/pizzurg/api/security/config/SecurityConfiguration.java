@@ -83,7 +83,6 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PATCH, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_PATCH_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
                 .requestMatchers(HttpMethod.DELETE, ENDPOINTS_AVAILABLE_FOR_ADMIN_ONLY_TO_DELETE_STATUS).hasAnyRole(ROLE_ADMINISTRATOR)
                 .anyRequest().denyAll()
-
                 // Adiciona o filtro de autenticação de usuário que criamos antes do filtro de segurança padrão do Spring Security
                 .and().addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

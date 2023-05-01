@@ -48,25 +48,27 @@ public class OrderService {
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal amount = BigDecimal.ZERO;
 
+        // Loop através de cada item do pedido recebido
         for(CreateOrderItemDto createOrderItemDto : createOrderDto.orderItems()) {
-            //verifica se a variação de produto existe
+            // Verifica se a variação de produto existe
             ProductVariation productVariation = productVariationRepository
                     .findByIdAndProductId(createOrderItemDto.productVariationId(), createOrderItemDto.productId())
                     .orElseThrow(ProductVariationNotFoundException::new);
 
-            //multiplica a quantidade de itens pelo preço e adiciona ao valor total
+            // Multiplica a quantidade de itens pelo preço e adiciona ao valor total
             amount = amount.add(productVariation.getPrice().multiply(new BigDecimal(createOrderItemDto.quantity())));
 
-            //cria o item da ordem e adiciona a lista
+            // Cria um item através dos dados do DTO
             OrderItem orderItem = OrderItem.builder()
                     .quantity(createOrderItemDto.quantity())
                     .productVariation(productVariation)
                     .build();
 
+            // Adiciona o item criado a lista de itens
             orderItems.add(orderItem);
         }
 
-        //monta o delivery data
+        // Cria os dados de entrega através dos dados do DTO
         DeliveryData deliveryData = DeliveryData.builder()
                 .receiverName(createOrderDto.deliveryData().receiverName())
                 .address(createOrderDto.deliveryData().address())
@@ -79,23 +81,22 @@ public class OrderService {
                 .phoneNumber(createOrderDto.deliveryData().phone_number())
                 .build();
 
-        //obtém usuário através do token
+        // Obtém usuário através do token
         User user = getUser(token);
 
-        //monta o order com todos os itens das ordens
+        // Cria o pedido com todos os itens associados a ele
         Order order = Order.builder()
                 .user(user)
-                //Category.valueOf(categoryNormalized.toUpperCase())
                 .paymentMethod(PaymentMethod.valueOf(createOrderDto.paymentMethod().toUpperCase()))
                 .orderItems(orderItems)
                 .amount(amount)
                 .deliveryData(deliveryData)
                 .build();
 
-        //associa cada item à ordem
+        // Associa cada item ao pedido
         orderItems.forEach(orderItem -> orderItem.setOrder(order));
 
-        //associa ordem aos dados de entrega
+        // Associa pedido aos dados de entrega
         deliveryData.setOrder(order);
 
         return orderMapper.mapOrderToRecoveryOrderDto(orderRepository.save(order));
@@ -104,7 +105,7 @@ public class OrderService {
     public RecoveryOrderDto getOrderById(String token, Long orderId) {
         User user = getUser(token);
 
-        //se tiver role de admin deve mostrar qualquer pedido, se não, mostrar o pedido apenas se ele pertencer ao usuário atual
+        // Se tiver role de customer deve retornar apena o pedido que pertence ao usuário atual
         if (user.getRoles().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
             return orderMapper.mapOrderToRecoveryOrderDto(orderRepository
                     .findByOrderIdAndUserId(orderId, user.getId())
@@ -117,7 +118,7 @@ public class OrderService {
     public Page<RecoveryOrderDto> getOrders(String token, Pageable pageable) {
         User user = getUser(token);
 
-        //se tiver role de customer deve mostrar apenas os pedidos que pertencem ao usuário atual. Se não, deve mostrar tudo.
+        // Se tiver role de customer deve retornar apenas os pedidos que pertencem ao usuário atual
         if (user.getRoles().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
             Page<Order> orderPage = orderRepository.findAllByUserId(user.getId(), pageable);
             return orderPage.map(order -> orderMapper.mapOrderToRecoveryOrderDto(order));
@@ -129,7 +130,7 @@ public class OrderService {
     public Page<RecoveryOrderDto> getOrderByStatus(String statusName, String token, Pageable pageable) {
         User user = getUser(token);
 
-        //se tiver role de customer deve mostrar apenas os pedidos que pertencem ao usuário atual. Se não, deve mostrar tudo.
+        // Se tiver role de customer deve retornar apenas os pedidos que pertencem ao usuário atual.
         if (user.getRoles().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_CUSTOMER))) {
             Page<Order> orderPage = orderRepository.findOrderByStatusAndUser(Status.valueOf(statusName.toUpperCase()), user.getId(), pageable);
             return orderPage.map(order -> orderMapper.mapOrderToRecoveryOrderDto(order));
@@ -138,10 +139,6 @@ public class OrderService {
         return orderPage.map(order -> orderMapper.mapOrderToRecoveryOrderDto(order));
     }
 
-    private User getUser(String token) {
-        String subject = jwtTokenService.getSubjectFromToken(token.replace("Bearer ", ""));
-        return userRepository.findByEmail(subject).orElseThrow(UserNotFoundException::new);
-    }
 
     public RecoveryOrderDto changeOrderStatus(Long orderId, UpdateStatusOrderDto updateStatusOrderDto) {
         Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundForUserException::new);
@@ -154,6 +151,11 @@ public class OrderService {
             throw new OrderNotFoundException();
         }
         orderRepository.deleteById(orderId);
+    }
+
+    private User getUser(String token) {
+        String subject = jwtTokenService.getSubjectFromToken(token.replace("Bearer ", ""));
+        return userRepository.findByEmail(subject).orElseThrow(UserNotFoundException::new);
     }
 
 }
