@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ProductVariation { //mudar para o nome ProductVariation
+public class ProductVariation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -29,7 +29,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiError> badCredentialsException(BadCredentialsException ex) {
+    public ResponseEntity<ApiError> badCredentialsException(RuntimeException ex) {
         ApiError apiError = ApiError
                 .builder()
                 .timestamp(LocalDateTime.now())
@@ -59,7 +59,7 @@ public class RestExceptionHandler {
     @ExceptionHandler({EmailAlreadyExistsException.class,
             ProductVariationUnavailableException.class,
             UserAssociatedWithOrderException.class})
-    public ResponseEntity<ApiError> emailExistsException(EmailAlreadyExistsException ex) {
+    public ResponseEntity<ApiError> unavailableException(RuntimeException ex) {
         ApiError apiError = ApiError
                 .builder()
                 .timestamp(LocalDateTime.now())

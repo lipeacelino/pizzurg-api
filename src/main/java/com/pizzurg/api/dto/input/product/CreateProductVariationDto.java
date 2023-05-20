@@ -13,7 +13,7 @@ public record CreateProductVariationDto(
         @NotBlank(message = "{not.blank.message}")
         String description,
 
-        @NotNull(message = "{not.null.message}") //é bom validar com um regex
+        @NotNull(message = "{not.null.message}")
         BigDecimal price,
 
         @NotNull(message = "{not.null.message}")

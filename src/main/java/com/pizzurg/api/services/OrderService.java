@@ -52,7 +52,7 @@ public class OrderService {
         for(CreateOrderItemDto createOrderItemDto : createOrderDto.orderItems()) {
             // Verifica se a variação de produto existe
             ProductVariation productVariation = productVariationRepository
-                    .findByIdAndProductId(createOrderItemDto.productVariationId(), createOrderItemDto.productId())
+                    .findByProductIdAndProductVariationId(createOrderItemDto.productId(), createOrderItemDto.productVariationId())
                     .orElseThrow(ProductVariationNotFoundException::new);
 
             // Multiplica a quantidade de itens pelo preço e adiciona ao valor total

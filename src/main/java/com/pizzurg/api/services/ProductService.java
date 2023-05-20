@@ -172,18 +172,19 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
+    // Método responsável por deletar uma variação de produto pelo id
     public void deleteProductVariationById(Long productId, Long productVariationId) {
-        if (!productRepository.existsById(productId)) {
-            throw new ProductNotFoundException();
-        }
-        if (!productVariationRepository.existsById(productVariationId)) {
-            throw new ProductVariationNotFoundException();
-        }
+        // Verifica se a variação de produto existe no produto em questão
+        ProductVariation productVariation = productVariationRepository
+                .findByProductIdAndProductVariationId(productId, productVariationId)
+                .orElseThrow(ProductVariationNotFoundException::new);
+
         // Se uma variação do produto estiver associada a um pedido, a variação não pode ser excluída
         if (orderItemRepository.findFirstByProductVariationId(productVariationId).isPresent()) {
             throw new ProductVariationAssociatedWithOrderException();
         }
-        productVariationRepository.deleteById(productVariationId);
+        // Deleta a variação de produto do banco de dados
+        productVariationRepository.deleteById(productVariation.getId());
     }
 
 }
